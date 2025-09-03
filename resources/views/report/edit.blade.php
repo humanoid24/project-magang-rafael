@@ -51,7 +51,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="notes">Notes</label>
+                            <label for="notes">Catatan</label>
                             <textarea id="notes" name="catatan" class="form-control">{{ old('catatan', $report->catatan) }}</textarea>
                         </div>
 

@@ -49,13 +49,21 @@ class AuthController extends Controller
             'password' => $request->input('password'),
         ];
 
-        if (Auth::Attempt($data)) {
-            return redirect()->route('dashboard.index');
+        if (Auth::attempt($data)) {
+            $user = Auth::user();
+
+            // Redirect berdasarkan role
+            if ($user->role === 3) { // admin PPIC
+                return redirect()->route('ppic.index');
+            } else { // admin biasa / pekerja
+                return redirect()->route('dashboard.index');
+            }
         } else {
             Session::flash('error', 'Username atau Password Salah');
             return redirect('/');
         }
     }
+
 
     public function login()
     {

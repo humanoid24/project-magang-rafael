@@ -13,6 +13,13 @@ if (! function_exists('isAdmin')) {
     }
 }
 
+if (! function_exists('isAdminPPIC')) {
+    function isAdminPPIC(): bool
+    {
+        return Auth::check() && Auth::user()->role === 3;
+    }
+}
+
 /**
  * Cek apakah user sedang login adalah pekerja
  */

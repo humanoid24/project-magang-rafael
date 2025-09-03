@@ -59,7 +59,7 @@ class ReportController extends Controller
             'selesai_kerja' => $validatedData['selesai_kerja'],
             'bagian' => $validatedData['bagian'],
             'sub_bagian' => $validatedData['sub_bagian'],
-            'catatan' => $validatedData['notes'],
+            'catatan' => $validatedData['catatan'],
         ]);
 
         return redirect()->route('dashboard.index')->with('success', 'Laporan berhasil disimpan!');

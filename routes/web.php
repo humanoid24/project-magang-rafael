@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdminPPICController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReportController;
+use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AuthController::class, 'login'])->name('login');
@@ -18,4 +20,6 @@ Route::get('actionlogout', [AuthController::class, 'actionLogout'])->name('actio
 
 Route::middleware('auth')->group(function () {
     Route::resource('/dashboard', ReportController::class);
+    Route::resource('/ppic', AdminPPICController::class);
 });
+

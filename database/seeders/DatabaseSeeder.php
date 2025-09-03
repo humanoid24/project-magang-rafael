@@ -24,6 +24,12 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('admin123'),
             ],
             [
+                'name' => 'Admin PPIC',
+                'email' => 'adminppic@example.com',
+                'role' => '3',
+                'password' => Hash::make('admin123'),
+            ],
+            [
                 'name' => 'Regular User',
                 'email' => 'user@example.com',
                 'role' => '2',

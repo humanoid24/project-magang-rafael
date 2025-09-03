@@ -21,11 +21,22 @@
                         @if(isAdmin())
                             <th>Nama Pekerja</th>
                         @endif
+                        
+                        <th>SO NO</th>
+                        <th>Customer</th>
+                        <th>PDO CRD</th>
+                        <th>Item Name</th>
+                        <th>PDO N</th>
+                        <th>Item</th>
+                        <th>PDO M</th>
+                        <th>Actual</th>
+                        <th>Aksi</th>
+
                         <th>Shift</th>
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
-                        <th>Bagian</th>
-                        <th>Sub Bagian</th>
+                        <th>Workstation</th>
+                        <th>Mesin</th>
                         <th>Catatan</th>
                         <th>Aksi</th>
                     </tr>
