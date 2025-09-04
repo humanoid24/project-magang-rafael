@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Divisi;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,8 @@ class AuthController extends Controller
     // Register
     public function showRegister()
     {
-        return view('auth.daftar');
+        $divisis = Divisi::all();
+        return view('auth.daftar', compact('divisis'));
     }
 
     public function actionRegister(Request $request)
@@ -21,7 +23,8 @@ class AuthController extends Controller
         $validate = $request->validate([
             'email' => 'required|max:255|email|unique:users',
             'name' => 'required|max:255',
-            'password' => 'required|min:4|confirmed'
+            'password' => 'required|min:4|confirmed',
+            'divisi_id' => 'required|exists:divisis,id',
         ], [
             'email.unique' => 'Email tidak boleh sama',
             'password.min' => 'Password minimal 4 karakter.',
@@ -32,6 +35,7 @@ class AuthController extends Controller
             'email' => $validate['email'],
             'name' => $validate['name'],
             'role' => 2,
+            'divisi_id' => $validate['divisi_id'],
             'password' => Hash::make($validate['password']),
         ]);
 

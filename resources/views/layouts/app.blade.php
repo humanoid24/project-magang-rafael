@@ -65,6 +65,14 @@
         time_24hr: true,
         defaultDate: new Date() // otomatis isi dengan jam sekarang
     });
+
+    flatpickr("#tanggal_report", {
+    enableTime: false, // filter cukup tanggal, jam ga perlu
+    dateFormat: "Y-m-d",
+    time_24hr: true,
+    defaultDate: document.getElementById("tanggal_report").value || null
+});
+
 </script>
 
 </body>

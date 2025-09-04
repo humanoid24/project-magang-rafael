@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bagians', function (Blueprint $table) {
+        Schema::create('divisis', function (Blueprint $table) {
             $table->id();
-            $table->string('workstation');
-            $table->string('mesin');
+            $table->string('divisi');
             $table->timestamps();
         });
     }
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bagians');
+        Schema::dropIfExists('divisis');
     }
 };

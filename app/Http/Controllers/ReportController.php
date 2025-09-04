@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductionReport;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,17 +12,51 @@ class ReportController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     public function index()
     {
-        if (isPekerja()) {
-            // hanya report milik pekerja
-            $report = ProductionReport::where('user_id', Auth::id())->get();
-        } else {
-            // admin semua report
+        $user = Auth::user();
+
+        if ($user->role === 1) {
+            // Admin: semua report
             $report = ProductionReport::all();
+            return view('report.index', compact('report'));
         }
 
-        return view('report.index', compact('report'));
+        if ($user->role === 3) {
+            // Admin PPIC: masuk ke halaman khusus PPIC
+            return redirect()->route('ppic.index');
+        }
+
+        if ($user->role === 2) {
+            $report = DB::table('ppics as p')
+                ->join('divisis as d', 'p.divisi_id', '=', 'd.id')
+                ->join('users as u', 'd.id', '=', 'u.divisi_id')
+                ->join('production_reports as pr', 'u.id', '=', 'pr.user_id')
+                ->where('u.id', $user->id) // hanya pekerja itu
+                ->where('p.divisi_id', $user->divisi_id)
+                ->select(
+                    'pr.id as report_id',
+                    'pr.shift',
+                    'pr.mulai_kerja',
+                    'pr.selesai_kerja',
+                    'pr.bagian',
+                    'pr.sub_bagian',
+                    'pr.catatan',
+                    'p.so_no',
+                    'p.customer',
+                    'p.item_name',
+                    'p.pdoc_n',
+                    'p.item',
+                    'p.pdoc_m',
+                    'p.actual',
+                    'd.divisi',
+                    'u.name as user_name'
+                )
+                ->get();
+
+            return view('report.index', ['report' => $report]);
+        }
     }
 
 

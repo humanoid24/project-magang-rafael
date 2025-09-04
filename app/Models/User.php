@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'divisi_id',
     ];
 
     /**
@@ -45,4 +46,13 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function divisi() {
+    return $this->belongsTo(Divisi::class);
+}
+
+public function reports() {
+    return $this->hasMany(ProductionReport::class);
+}
+
 }

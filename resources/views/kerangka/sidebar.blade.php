@@ -14,27 +14,98 @@
         <span>Dashboard</span></a>
 </li>
 
-<!-- Heading -->
-<div class="sidebar-heading">
-    Addons
-</div>
+@if (in_array(Auth::user()->role, [1, 3]))
+<li class="nav-item active">
+    <a class="nav-link" href="{{ route('ppic.janfar') }}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Janfar</span></a>
+</li>
+
+<li class="nav-item active">
+    <a class="nav-link" href="{{ route('ppic.sawing')}}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Sawing</span></a>
+</li>
+
+<li class="nav-item active">
+    <a class="nav-link" href="{{ route('ppic.cutting') }}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Cutting</span></a>
+</li>
+
+<li class="nav-item active">
+    <a class="nav-link" href="{{ route('ppic.bending') }}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Bending</span></a>
+</li>
+
+<li class="nav-item active">
+    <a class="nav-link" href="{{ route('ppic.press') }}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Press</span></a>
+</li>
+
+<li class="nav-item active">
+    <a class="nav-link" href="{{ route('ppic.racking') }}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Racking</span></a>
+</li>
+
+<li class="nav-item active">
+    <a class="nav-link" href="{{ route('ppic.rollforming') }}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Roll Forming</span></a>
+</li>
+
+<li class="nav-item active">
+    <a class="nav-link" href="{{ route('ppic.spotwelding') }}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Spot Welding</span></a>
+</li>
+
+<li class="nav-item active">
+    <a class="nav-link" href="{{ route('ppic.weldingaccesoris') }}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Welding Accessoris</span></a>
+</li>
+
+<li class="nav-item active">
+    <a class="nav-link" href="{{ route('ppic.weldingshofiting1') }}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Welding Shofiting 1</span></a>
+</li>
+
+<li class="nav-item active">
+    <a class="nav-link" href="{{ route('ppic.weldingshofiting2') }}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Welding Shofiting 2</span></a>
+</li>
+
+<li class="nav-item active">
+    <a class="nav-link" href="{{ route('ppic.weldingdoor') }}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Welding Door</span></a>
+</li>
+@endif
+
+
 
 <!-- Nav Item - Pages Collapse Menu -->
-{{-- <li class="nav-item">
+<!-- <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
         aria-expanded="true" aria-controls="collapsePages">
         <i class="fas fa-fw fa-folder"></i>
-        <span>Barang</span>
+        <span>Divisi</span>
     </a>
     <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Barang masuk dan keluar</h6>
-            <a class="collapse-item" href="{{ route('barang.index') }}">Barang</a>
-            <a class="collapse-item" href="{{ route('barang-masuk.index') }}">Barang Masuk</a>
-            <a class="collapse-item" href="{{ route('barang-keluar.index') }}">Barang Keluar</a>
+            <h6 class="collapse-header">Divisi</h6>
+            <a class="collapse-item" href="#">Barang</a>
+            <a class="collapse-item" href="#">Barang Masuk</a>
+            <a class="collapse-item" href="#">Barang Keluar</a>
         </div>
     </div>
-</li> --}}
+</li> -->
 
 
 <!-- Nav Item - Tables -->

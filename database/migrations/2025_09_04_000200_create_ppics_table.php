@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('ppics', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('divisi_id')
+                  ->nullable()
+                  ->constrained('divisis')
+                  ->nullOnDelete();
             $table->string('so_no');
+            // $table->dateTime('tanggal');
             $table->string('customer');
             $table->string('pdo_crd');
             $table->string('item_name');
@@ -21,7 +26,6 @@ return new class extends Migration
             $table->string('item');
             $table->string('pdoc_m');
             $table->string('actual');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -18,6 +18,10 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->tinyInteger('role')->default(2);
+            $table->foreignId('divisi_id')
+                  ->nullable()
+                  ->constrained('divisis')
+                  ->nullOnDelete();
             $table->rememberToken();
             $table->timestamps();
         });

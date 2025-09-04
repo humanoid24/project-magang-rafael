@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,27 +14,50 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // --- Seed Users ---
         User::factory()->createMany([
             [
                 'name' => 'Admin User',
-                'email' => 'admin@example.com',
+                'email' => 'admin@spectrum.com',
                 'role' => '1',
                 'password' => Hash::make('admin123'),
             ],
             [
                 'name' => 'Admin PPIC',
-                'email' => 'adminppic@example.com',
+                'email' => 'adminppic@spectrum.com',
                 'role' => '3',
                 'password' => Hash::make('admin123'),
             ],
             [
                 'name' => 'Regular User',
-                'email' => 'user@example.com',
+                'email' => 'user@spectrum.com',
                 'role' => '2',
-                'password' => Hash::make('123'),
+                'password' => Hash::make('user123'),
             ],
         ]);
+
+        // --- Seed Divisis ---
+        $divisis = [
+            'JANFAR',
+            'SAWING',
+            'CUTTING',
+            'BENDING',
+            'PRESS',
+            'RACKING',
+            'ROLL FORMING',
+            'SPOT WELDING',
+            'WELDING ACCESORIS',
+            'WELDING SHIFTING 1',
+            'WELDING SHIFTING 2',
+            'WELDING DOOR',
+        ];
+
+        foreach ($divisis as $divisi) {
+            DB::table('divisis')->insert([
+                'divisi' => $divisi,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

@@ -11,6 +11,16 @@
                 <div class="card-body">
                     <form action="{{ route('ppic.store') }}" method="POST">
                         @csrf
+                        <div class="form-group mb-3">
+                            <label for="divisi">Divisi</label>
+                            <select class="form-control" name="divisi_id" id="divisi" required>
+                                <option value="" selected disabled>Pilih Divisi</option>
+                                @foreach ($divisis as $divisi)
+                                    <option value="{{ $divisi->id }}">{{ $divisi->divisi }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="form-group">
                             <label for="so_no">SO NO</label>
                             <input name="so_no" type="text" class="form-control" required>
@@ -49,15 +59,15 @@
 
                         <div class="form-group">
                             <label for="actual">ACTUAL</label>
-                            <input type="text" name="actual" class="form-control" required>
+                            <input type="text" name="actual" class="form-control">
                         </div>
 
-                        <select class="form-select" aria-label="Default select example">
+                        <!-- <select class="form-select" aria-label="Default select example">
                             <option selected>Open this select menu</option>
                             <option value="1">One</option>
                             <option value="2">Two</option>
                             <option value="3">Three</option>
-                        </select>
+                        </select> -->
 
                         <div class="text-right">
                             <button type="submit" class="btn btn-primary">Simpan</button>

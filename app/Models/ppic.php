@@ -16,10 +16,17 @@ class ppic extends Model
         'item',
         'pdoc_m',
         'actual',
+        'divisi_id',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function divisi()
+{
+    return $this->belongsTo(Divisi::class);
+}
+
 }

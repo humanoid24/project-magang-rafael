@@ -57,7 +57,14 @@
 
               </div>
 
-              <button class="btn btn-primary btn-lg w-100" type="submit">
+              <select class="form-control" name="divisi_id" id="divisi" required>
+                  <option value="" selected disabled>Pilih Divisi</option>
+                  @foreach ($divisis as $divisi)
+                      <option value="{{ $divisi->id }}">{{ $divisi->divisi }}</option>
+                  @endforeach
+              </select>
+
+              <button class="btn btn-primary btn-lg w-100 mt-4" type="submit">
                 <i class="bi bi-person-check-fill me-1"></i>Register
               </button>
             </form>
