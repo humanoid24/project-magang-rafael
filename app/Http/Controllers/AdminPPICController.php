@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Divisi;
 use App\Models\ppic;
+use App\Models\ProductionReport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminPPICController extends Controller
 {
@@ -14,7 +16,7 @@ class AdminPPICController extends Controller
      */
     public function index()
     {
-        $report = ppic::all();
+        $report = ProductionReport::all();
 
         return view('adminppic.dashboard', compact('report'));
     }
@@ -47,9 +49,10 @@ class AdminPPICController extends Controller
         ]);
 
         $validatedData['actual'] = $validatedData['actual'] ?? '-';
+        $validatedData['user_id'] = Auth::id();
 
         // Simpan data ke database
-        ppic::create($validatedData);
+        ProductionReport::create($validatedData);
 
         return redirect()->route('ppic.index')
             ->with('success', 'Perintah pekerjaan berhasil disimpan!');
@@ -68,7 +71,7 @@ class AdminPPICController extends Controller
      */
     public function edit(string $id)
     {
-        $report = ppic::findOrFail($id);
+        $report = ProductionReport::findOrFail($id);
         return view('adminppic.edit', compact('report'));
     }
 
@@ -90,7 +93,7 @@ class AdminPPICController extends Controller
         ]);
 
         // Ambil data berdasarkan id
-        $report = ppic::findOrFail($id);
+        $report = ProductionReport::findOrFail($id);
 
         // Update dengan data valid
         $report->update($validatedData);
@@ -104,7 +107,7 @@ class AdminPPICController extends Controller
      */
     public function destroy(string $id)
     {
-        $report = ppic::findOrFail($id);
+        $report = ProductionReport::findOrFail($id);
         $report->delete();
 
         return redirect()->route('ppic.index')
@@ -118,7 +121,7 @@ class AdminPPICController extends Controller
     $divisi = Divisi::where('divisi', 'JANFAR')->first();
 
     // ambil report sesuai divisi
-    $report = Ppic::where('divisi_id', $divisi->id)->get();
+    $report = ProductionReport::where('divisi_id', $divisi->id)->get();
 
     return view('adminppic.divisi.janfar', compact('report'));
 }
@@ -133,7 +136,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'JANFAR')->first();
 
         // Query filter berdasarkan tanggal + divisi
-        $report = Ppic::where('divisi_id', $divisi->id)
+        $report = ProductionReport::where('divisi_id', $divisi->id)
                     ->whereDate('created_at', $tanggal_report)
                     ->get();
 
@@ -147,7 +150,7 @@ class AdminPPICController extends Controller
             $divisi = Divisi::where('divisi', 'SAWING')->first();
 
             // ambil report sesuai divisi
-            $report = Ppic::where('divisi_id', $divisi->id)->get();
+            $report = ProductionReport::where('divisi_id', $divisi->id)->get();
 
             return view('adminppic.divisi.sawing', compact('report'));
         }
@@ -161,7 +164,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'SAWING')->first();
 
         // Query filter berdasarkan tanggal + divisi
-        $report = Ppic::where('divisi_id', $divisi->id)
+        $report = ProductionReport::where('divisi_id', $divisi->id)
                     ->whereDate('created_at', $tanggal_report)
                     ->get();
 
@@ -174,7 +177,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'CUTTING')->first();
 
         // ambil report sesuai divisi
-        $report = Ppic::where('divisi_id', $divisi->id)->get();
+        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
 
         return view('adminppic.divisi.cutting', compact('report'));
     }
@@ -188,7 +191,7 @@ class AdminPPICController extends Controller
             $divisi = Divisi::where('divisi', 'CUTTING')->first();
 
             // Query filter berdasarkan tanggal + divisi
-            $report = Ppic::where('divisi_id', $divisi->id)
+            $report = ProductionReport::where('divisi_id', $divisi->id)
                         ->whereDate('created_at', $tanggal_report)
                         ->get();
 
@@ -201,7 +204,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'BENDING')->first();
 
         // ambil report sesuai divisi
-        $report = Ppic::where('divisi_id', $divisi->id)->get();
+        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
 
         return view('adminppic.divisi.bending', compact('report'));
     }
@@ -215,7 +218,7 @@ class AdminPPICController extends Controller
             $divisi = Divisi::where('divisi', 'BENDING')->first();
 
             // Query filter berdasarkan tanggal + divisi
-            $report = Ppic::where('divisi_id', $divisi->id)
+            $report = ProductionReport::where('divisi_id', $divisi->id)
                         ->whereDate('created_at', $tanggal_report)
                         ->get();
 
@@ -229,7 +232,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'PRESS')->first();
 
         // ambil report sesuai divisi
-        $report = Ppic::where('divisi_id', $divisi->id)->get();
+        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
 
         return view('adminppic.divisi.press', compact('report'));
     }
@@ -243,7 +246,7 @@ class AdminPPICController extends Controller
             $divisi = Divisi::where('divisi', 'PRESS')->first();
 
             // Query filter berdasarkan tanggal + divisi
-            $report = Ppic::where('divisi_id', $divisi->id)
+            $report = ProductionReport::where('divisi_id', $divisi->id)
                         ->whereDate('created_at', $tanggal_report)
                         ->get();
 
@@ -257,7 +260,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'RACKING')->first();
 
         // ambil report sesuai divisi
-        $report = Ppic::where('divisi_id', $divisi->id)->get();
+        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
 
         return view('adminppic.divisi.racking', compact('report'));
     }
@@ -271,7 +274,7 @@ class AdminPPICController extends Controller
             $divisi = Divisi::where('divisi', 'RACKING')->first();
 
             // Query filter berdasarkan tanggal + divisi
-            $report = Ppic::where('divisi_id', $divisi->id)
+            $report = ProductionReport::where('divisi_id', $divisi->id)
                         ->whereDate('created_at', $tanggal_report)
                         ->get();
 
@@ -285,7 +288,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'ROLL FORMING')->first();
 
         // ambil report sesuai divisi
-        $report = Ppic::where('divisi_id', $divisi->id)->get();
+        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
 
         return view('adminppic.divisi.rollforming', compact('report'));
     }
@@ -299,7 +302,7 @@ class AdminPPICController extends Controller
             $divisi = Divisi::where('divisi', 'ROLL FORMING')->first();
 
             // Query filter berdasarkan tanggal + divisi
-            $report = Ppic::where('divisi_id', $divisi->id)
+            $report = ProductionReport::where('divisi_id', $divisi->id)
                         ->whereDate('created_at', $tanggal_report)
                         ->get();
 
@@ -313,7 +316,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'SPOT WELDING')->first();
 
         // ambil report sesuai divisi
-        $report = Ppic::where('divisi_id', $divisi->id)->get();
+        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
 
         return view('adminppic.divisi.spotwelding', compact('report'));
     }
@@ -327,7 +330,7 @@ class AdminPPICController extends Controller
             $divisi = Divisi::where('divisi', 'SPOT WELDING')->first();
 
             // Query filter berdasarkan tanggal + divisi
-            $report = Ppic::where('divisi_id', $divisi->id)
+            $report = ProductionReport::where('divisi_id', $divisi->id)
                         ->whereDate('created_at', $tanggal_report)
                         ->get();
 
@@ -341,7 +344,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'WELDING ACCESORIS')->first();
 
         // ambil report sesuai divisi
-        $report = Ppic::where('divisi_id', $divisi->id)->get();
+        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
 
         return view('adminppic.divisi.weldingaccesoris', compact('report'));
     }
@@ -355,7 +358,7 @@ class AdminPPICController extends Controller
             $divisi = Divisi::where('divisi', 'WELDING ACCESORIS')->first();
 
             // Query filter berdasarkan tanggal + divisi
-            $report = Ppic::where('divisi_id', $divisi->id)
+            $report = ProductionReport::where('divisi_id', $divisi->id)
                         ->whereDate('created_at', $tanggal_report)
                         ->get();
 
@@ -369,7 +372,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'WELDING SHOFITING 1')->first();
 
         // ambil report sesuai divisi
-        $report = Ppic::where('divisi_id', $divisi->id)->get();
+        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
 
         return view('adminppic.divisi.weldingshofting1', compact('report'));
     }
@@ -383,7 +386,7 @@ class AdminPPICController extends Controller
             $divisi = Divisi::where('divisi', 'WELDING SHOFITING 1')->first();
 
             // Query filter berdasarkan tanggal + divisi
-            $report = Ppic::where('divisi_id', $divisi->id)
+            $report = ProductionReport::where('divisi_id', $divisi->id)
                         ->whereDate('created_at', $tanggal_report)
                         ->get();
 
@@ -397,7 +400,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'WELDING SHOFITING 2')->first();
 
         // ambil report sesuai divisi
-        $report = Ppic::where('divisi_id', $divisi->id)->get();
+        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
 
         return view('adminppic.divisi.weldingshofting2', compact('report'));
     }
@@ -411,7 +414,7 @@ class AdminPPICController extends Controller
             $divisi = Divisi::where('divisi', 'WELDING SHOFITING 2')->first();
 
             // Query filter berdasarkan tanggal + divisi
-            $report = Ppic::where('divisi_id', $divisi->id)
+            $report = ProductionReport::where('divisi_id', $divisi->id)
                         ->whereDate('created_at', $tanggal_report)
                         ->get();
 
@@ -425,7 +428,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'WELDING DOOR')->first();
 
         // ambil report sesuai divisi
-        $report = Ppic::where('divisi_id', $divisi->id)->get();
+        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
 
         return view('adminppic.divisi.weldingdoor', compact('report'));
     }
@@ -439,7 +442,7 @@ class AdminPPICController extends Controller
             $divisi = Divisi::where('divisi', 'WELDING DOOR')->first();
 
             // Query filter berdasarkan tanggal + divisi
-            $report = Ppic::where('divisi_id', $divisi->id)
+            $report = ProductionReport::where('divisi_id', $divisi->id)
                         ->whereDate('created_at', $tanggal_report)
                         ->get();
 

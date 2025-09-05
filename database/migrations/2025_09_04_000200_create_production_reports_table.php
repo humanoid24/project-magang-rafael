@@ -14,10 +14,23 @@ return new class extends Migration
         Schema::create('production_reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->integer('shift');
-            $table->dateTime('mulai_kerja');
-            $table->dateTime('selesai_kerja');
-            $table->string('bagian');
+            $table->foreignId('divisi_id')
+                ->nullable()
+                ->constrained('divisis')
+                ->nullOnDelete();
+            $table->string('so_no');
+            // $table->dateTime('tanggal');
+            $table->string('customer');
+            $table->string('pdo_crd');
+            $table->string('item_name');
+            $table->string('pdoc_n');
+            $table->string('item');
+            $table->string('pdoc_m');
+            $table->string('actual');
+            $table->integer('shift')->nullable();
+            $table->dateTime('mulai_kerja')->nullable();
+            $table->dateTime('selesai_kerja')->nullable();
+            $table->string('bagian')->nullable();
             $table->string('sub_bagian')->nullable();
             $table->text('catatan')->nullable();
             $table->timestamps();

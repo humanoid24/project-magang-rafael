@@ -6,11 +6,11 @@
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
+    {{-- <div class="card-header py-3">
         @if(isPekerja())
             <a href="{{ route('dashboard.create') }}" class="btn btn-primary mb-3">+ Tambah Report</a>
         @endif
-    </div>
+    </div> --}}
 
     <div class="card-body">
         <div class="table-responsive">
@@ -30,7 +30,6 @@
                         <th>Item</th>
                         <th>PDO M</th>
                         <th>Actual</th>
-                        <th>Aksi</th>
 
                         <th>Shift</th>
                         <th>Mulai Kerja</th>
@@ -45,6 +44,14 @@
                     @foreach($report as $pekerja)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
+                            <td>{{ $pekerja->so_no }}</td>
+                            <td>{{ $pekerja->customer }}</td>
+                            <td>{{ $pekerja->pdo_crd }}</td>
+                            <td>{{ $pekerja->item_name }}</td>
+                            <td>{{ $pekerja->pdoc_n }}</td>
+                            <td>{{ $pekerja->item }}</td>
+                            <td>{{ $pekerja->pdoc_m }}</td>
+                            <td>{{ $pekerja->actual }}</td>
                             @if(isAdmin())
                                 <td>{{ $pekerja->user->name ?? '-' }}</td>
                             @endif
@@ -56,7 +63,7 @@
                             <td>{{ $pekerja->catatan }}</td>
                             <td>
                                 @if (isPekerja())
-                                <a href="{{ route('dashboard.edit', $pekerja->id) }}" class="btn btn-sm btn-warning">Edit</a>       
+                                <a href="{{ route('dashboard.edit', $pekerja->id) }}" class="btn btn-sm btn-warning">Tambah Laporan / Edit Laporan</a>       
                                 @endif
                                 
                                 @if(isAdmin())

@@ -27,13 +27,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'adminppic@spectrum.com',
                 'role' => '3',
                 'password' => Hash::make('admin123'),
-            ],
-            [
-                'name' => 'Regular User',
-                'email' => 'user@spectrum.com',
-                'role' => '2',
-                'password' => Hash::make('user123'),
-            ],
+            ]
         ]);
 
         // --- Seed Divisis ---
@@ -47,8 +41,8 @@ class DatabaseSeeder extends Seeder
             'ROLL FORMING',
             'SPOT WELDING',
             'WELDING ACCESORIS',
-            'WELDING SHIFTING 1',
-            'WELDING SHIFTING 2',
+            'WELDING SHOFITING 1',
+            'WELDING SHOFITING 2',
             'WELDING DOOR',
         ];
 

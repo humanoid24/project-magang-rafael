@@ -10,13 +10,16 @@ class Divisi extends Model
 
 
 
-    public function ppics() {
-    return $this->hasMany(Ppic::class);
-}
+        public function ppics() {
+        return $this->hasMany(Ppic::class);
+    }
 
-public function users() {
-    return $this->hasMany(User::class);
-}
-
+    public function users() {
+        return $this->hasMany(User::class);
+    }
+    public function productionReports()
+    {
+        return $this->hasMany(ProductionReport::class);
+    }
     
 }

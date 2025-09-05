@@ -19,6 +19,8 @@
                                 <option value="">-- Pilih Shift --</option>
                                 <option value="1" {{ $report->shift == 1 ? 'selected' : '' }}>1</option>
                                 <option value="2" {{ $report->shift == 2 ? 'selected' : '' }}>2</option>
+                                <option value="3" {{ $report->shift == 3 ? 'selected' : '' }}>3</option>
+
                             </select>
                         </div>
 
@@ -37,10 +39,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="bagian">Workstation</label>
-                            <input type="text" id="bagian" name="bagian" 
-                                   value="{{ old('bagian', $report->bagian) }}" 
-                                   class="form-control" required>
+                            <div class="form-group">
+                                <label for="divisi">Workstation</label>
+                                <input type="text" class="form-control" 
+                                    value="{{ $report->divisi->divisi }}" readonly>
+                                <input type="hidden" name="bagian" value="{{ $report->divisi->divisi }}">
+                            </div>
+                                
                         </div>
 
                         <div class="form-group">

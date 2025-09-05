@@ -54,12 +54,12 @@
                             <td>{{ $item->pdoc_m }}</td>
                             <td>{{ $item->actual }}</td>
 
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ $item->shift }}</td>
+                            <td>{{ $item->mulai_kerja }}</td>
+                            <td>{{ $item->selesai_kerja }}</td>
+                            <td>{{ $item->bagian }}</td>
+                            <td>{{ $item->sub_bagian }}</td>
+                            <td>{{ $item->catatan }}</td>
 
                             <td>
                                 <a href="{{ route('ppic.edit', $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
