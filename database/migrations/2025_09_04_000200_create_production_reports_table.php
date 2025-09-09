@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('production_reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade')->nullOnDelete();;
             $table->foreignId('divisi_id')
                 ->nullable()
                 ->constrained('divisis')
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('pdo_crd')->nullable();
             $table->string('item_name')->nullable();
             $table->integer('pdoc_n')->nullable();
-            $table->integer('item')->nullable();
+            $table->decimal('item', 10, 2)->nullable();
             $table->string('pdoc_m')->nullable();
             $table->string('actual')->nullable();
             $table->integer('shift')->nullable();

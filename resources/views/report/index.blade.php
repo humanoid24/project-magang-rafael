@@ -47,20 +47,28 @@
                     @foreach($report as $pekerja)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
+                            @if(isAdmin())
+                                <th>{{ $pekerja->user->name }}</th>
+                            @endif
                             <td>{{ $pekerja->so_no }}</td>
                             <td>{{ $pekerja->customer }}</td>
                             <td>{{ $pekerja->pdo_crd }}</td>
                             <td>{{ $pekerja->item_name }}</td>
                             <td>{{ $pekerja->pdoc_n }}</td>
-                            <td>{{ $pekerja->item }}</td>
+                            <td>{{ rtrim(rtrim($pekerja->item, '0'), '.') }}</td>
                             <td>{{ $pekerja->pdoc_n * $pekerja->item }}</td>
 
                             <td>{{ $pekerja->shift }}</td>
                             <td>{{ $pekerja->mulai_kerja }}</td>
                             <td>{{ $pekerja->selesai_kerja }}</td>
                             <td>
-                                {{ \Carbon\Carbon::parse($pekerja->mulai_kerja)->diffInMinutes(\Carbon\Carbon::parse($pekerja->selesai_kerja)) }} menit
+                                @if ($pekerja->mulai_kerja && $pekerja->selesai_kerja)
+                                    {{ \Carbon\Carbon::parse($pekerja->mulai_kerja)->diffInMinutes(\Carbon\Carbon::parse($pekerja->selesai_kerja)) }} menit
+                                @else
+                                    
+                                @endif
                             </td>
+
                             <td>{{ $pekerja->bagian }}</td>
                             <td>{{ $pekerja->sub_bagian }}</td>
                             

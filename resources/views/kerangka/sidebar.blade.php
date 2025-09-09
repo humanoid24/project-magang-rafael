@@ -15,7 +15,33 @@
 </li>
 
 @if (in_array(Auth::user()->role, [1, 3]))
-<li class="nav-item active">
+
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+        aria-expanded="true" aria-controls="collapsePages">
+        <i class="fas fa-fw fa-folder"></i>
+        <span>Divisi</span>
+    </a>
+    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="{{ route('ppic.janfar') }}">Janfar</a>
+            <a class="collapse-item" href="{{ route('ppic.sawing')}}">Sawing</a>
+            <a class="collapse-item" href="{{ route('ppic.cutting') }}">Cutting</a>
+            <a class="collapse-item" href="{{ route('ppic.bending') }}">Bending</a>
+            <a class="collapse-item" href="{{ route('ppic.press') }}">Press</a>
+            <a class="collapse-item" href="{{ route('ppic.racking') }}">Racking</a>
+            <a class="collapse-item" href="{{ route('ppic.rollforming') }}">Roll Forming</a>
+            <a class="collapse-item" href="{{ route('ppic.spotwelding') }}">Spot Welding</a>
+            <a class="collapse-item" href="{{ route('ppic.weldingaccesoris') }}">Welding Accessoris</a>
+            <a class="collapse-item" href="{{ route('ppic.weldingshofiting1') }}">Welding Shofiting 1</a>
+            <a class="collapse-item" href="{{ route('ppic.weldingshofiting2') }}">Welding Shofiting 2</a>
+            <a class="collapse-item" href="{{ route('ppic.weldingdoor') }}">Welding Door</a>
+        </div>
+    </div>
+</li>
+
+
+{{-- <li class="nav-item active">
     <a class="nav-link" href="{{ route('ppic.janfar') }}">
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Janfar</span></a>
@@ -85,7 +111,7 @@
     <a class="nav-link" href="{{ route('ppic.weldingdoor') }}">
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Welding Door</span></a>
-</li>
+</li> --}}
 @endif
 
 

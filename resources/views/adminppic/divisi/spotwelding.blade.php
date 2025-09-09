@@ -65,7 +65,6 @@
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
                         <th>Lama Kerja</th>
-
                         <th>Workstation</th>
                         <th>Mesin</th>
 
@@ -84,15 +83,20 @@
                             <td>{{ $item->pdo_crd }}</td>
                             <td>{{ $item->item_name }}</td>
                             <td>{{ $item->pdoc_n }}</td>
-                            <td>{{ $item->item }}</td>
+                            <td>{{ rtrim(rtrim($item->item, '0'), '.') }}</td>
                             <td>{{ $item->pdoc_n * $item->item }}</td>
 
                             <td>{{ $item->shift }}</td>
                             <td>{{ $item->mulai_kerja }}</td>
                             <td>{{ $item->selesai_kerja }}</td>
                             <td>
-                                {{ \Carbon\Carbon::parse($item->mulai_kerja)->diffInMinutes(\Carbon\Carbon::parse($item->selesai_kerja)) }} menit
+                                @if ($item->mulai_kerja && $item->selesai_kerja)
+                                    {{ \Carbon\Carbon::parse($item->mulai_kerja)->diffInMinutes(\Carbon\Carbon::parse($item->selesai_kerja)) }} menit
+                                @else
+                                    
+                                @endif
                             </td>
+
                             <td>{{ $item->bagian }}</td>
                             <td>{{ $item->sub_bagian }}</td>
                             

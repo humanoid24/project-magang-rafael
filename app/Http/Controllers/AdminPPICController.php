@@ -49,7 +49,7 @@ class AdminPPICController extends Controller
         ]);
 
         $validatedData['actual'] = $validatedData['actual'] ?? '-';
-        $validatedData['user_id'] = Auth::id();
+        // $validatedData['user_id'] = Auth::id();
 
         // Simpan data ke database
         ProductionReport::create($validatedData);
