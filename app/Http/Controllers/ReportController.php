@@ -111,6 +111,8 @@ class ReportController extends Controller
             'catatan' => 'nullable|string',
         ]);
 
+        $validatedData['user_id'] = Auth::id();
+
         $report = ProductionReport::findOrFail($id);
         $report->update($validatedData);
 

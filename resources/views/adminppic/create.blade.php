@@ -49,7 +49,7 @@
 
                         <div class="form-group">
                             <label for="item">WEIGHT/PCS</label>
-                            <input type="number" name="item" class="form-control" required>
+                            <input type="number" name="item" class="form-control" step="0.01" required>
                         </div>
 
                         {{-- <div class="form-group">
