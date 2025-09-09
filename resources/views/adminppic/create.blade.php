@@ -43,19 +43,19 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="pdoc_n">PDO CRD</label>
-                            <input type="text" name="pdoc_n" class="form-control" required>
+                            <label for="pdoc_n">QTY</label>
+                            <input type="number" name="pdoc_n" class="form-control" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="item">ITEM</label>
-                            <input type="text" name="item" class="form-control" required>
+                            <label for="item">WEIGHT/PCS</label>
+                            <input type="number" name="item" class="form-control" required>
                         </div>
 
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="pdoc_m">PDO CRD</label>
                             <input type="text" name="pdoc_m" class="form-control" required>
-                        </div>
+                        </div> --}}
 
                         <div class="form-group">
                             <label for="actual">ACTUAL</label>

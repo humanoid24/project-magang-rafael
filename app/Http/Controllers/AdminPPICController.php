@@ -43,7 +43,7 @@ class AdminPPICController extends Controller
             'item_name' => 'required|string',
             'pdoc_n' => 'required|string',
             'item' => 'required|string',
-            'pdoc_m' => 'required|string',
+            // 'pdoc_m' => 'required|string',
             'actual' => 'nullable|string',
             'divisi_id' => 'required|exists:divisis,id',
         ]);
@@ -88,7 +88,7 @@ class AdminPPICController extends Controller
             'item_name' => 'required|string',
             'pdoc_n' => 'required|string',
             'item' => 'required|string',
-            'pdoc_m' => 'required|string',
+            // 'pdoc_m' => 'required|string',
             'actual' => 'string',
         ]);
 
@@ -116,7 +116,7 @@ class AdminPPICController extends Controller
 
 
     public function janfar()
-{
+    {
     // cari divisi_id JANFAR
     $divisi = Divisi::where('divisi', 'JANFAR')->first();
 
@@ -124,7 +124,7 @@ class AdminPPICController extends Controller
     $report = ProductionReport::where('divisi_id', $divisi->id)->get();
 
     return view('adminppic.divisi.janfar', compact('report'));
-}
+    }
 
 
     public function lihatsemuadatajanfar(Request $request)
@@ -143,8 +143,32 @@ class AdminPPICController extends Controller
         return view('adminppic.divisi.janfar', compact('report', 'tanggal_report'));
     }
 
+    public function exportJanfar(Request $request)
+    {
+        $title = "Laporan Produksi Divisi Janfar";
 
-        public function sawing()
+        $divisi = Divisi::where('divisi', 'JANFAR')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('created_at', [
+                $request->tanggal_awal . " 00:00:00",
+                $request->tanggal_akhir . " 23:59:59"
+            ]);
+        }
+
+        $report = $query->get(); // ambil data di akhir
+
+        return response()->view('adminppic.divisi.export.export_divisi', compact('report', 'title'))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', "attachment; filename=laporan_janfar.xls")
+            ->header('Cache-Control', 'no-cache, must-revalidate')
+            ->header('Pragma', 'no-cache');
+    }
+
+
+
+    public function sawing()
         {
             // cari divisi_id JANFAR
             $divisi = Divisi::where('divisi', 'SAWING')->first();
@@ -171,6 +195,31 @@ class AdminPPICController extends Controller
         return view('adminppic.divisi.sawing', compact('report', 'tanggal_report'));
     }
 
+    public function exportSawing(Request $request)
+    {
+        $title = "Laporan Produksi Divisi Sawing";
+
+        $divisi = Divisi::where('divisi', 'SAWING')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('created_at', [
+                $request->tanggal_awal . " 00:00:00",
+                $request->tanggal_akhir . " 23:59:59"
+            ]);
+        }
+
+        $report = $query->get(); // ambil data di akhir
+
+        return response()->view('adminppic.divisi.export.export_divisi', compact('report', 'title'))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', "attachment; filename=laporan_sawing.xls")
+            ->header('Cache-Control', 'no-cache, must-revalidate')
+            ->header('Pragma', 'no-cache');
+    }
+
+
+
     public function cutting()
     {
         // cari divisi_id JANFAR
@@ -182,23 +231,46 @@ class AdminPPICController extends Controller
         return view('adminppic.divisi.cutting', compact('report'));
     }
 
-        public function lihatsemuadatacutting(Request $request)
-        {
-            // Ambil tanggal dari request
-            $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
+    public function lihatsemuadatacutting(Request $request)
+    {
+        // Ambil tanggal dari request
+        $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
 
-            // Cari ID divisi JANFAR
-            $divisi = Divisi::where('divisi', 'CUTTING')->first();
+        // Cari ID divisi JANFAR
+        $divisi = Divisi::where('divisi', 'CUTTING')->first();
 
-            // Query filter berdasarkan tanggal + divisi
-            $report = ProductionReport::where('divisi_id', $divisi->id)
-                        ->whereDate('created_at', $tanggal_report)
-                        ->get();
+        // Query filter berdasarkan tanggal + divisi
+        $report = ProductionReport::where('divisi_id', $divisi->id)
+                    ->whereDate('created_at', $tanggal_report)
+                    ->get();
 
-            return view('adminppic.divisi.cutting', compact('report', 'tanggal_report'));
+        return view('adminppic.divisi.cutting', compact('report', 'tanggal_report'));
+    }
+
+    public function exportCutting(Request $request)
+    {
+        $title = "Laporan Produksi Divisi Cutting";
+
+        $divisi = Divisi::where('divisi', 'CUTTING')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('created_at', [
+                $request->tanggal_awal . " 00:00:00",
+                $request->tanggal_akhir . " 23:59:59"
+            ]);
         }
 
-        public function bending()
+        $report = $query->get(); // ambil data di akhir
+
+        return response()->view('adminppic.divisi.export.export_divisi', compact('report', 'title'))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', "attachment; filename=laporan_cutting.xls")
+            ->header('Cache-Control', 'no-cache, must-revalidate')
+            ->header('Pragma', 'no-cache');
+    }
+
+    public function bending()
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'BENDING')->first();
@@ -209,24 +281,48 @@ class AdminPPICController extends Controller
         return view('adminppic.divisi.bending', compact('report'));
     }
 
-        public function lihatsemuadatabending(Request $request)
-        {
-            // Ambil tanggal dari request
-            $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
+    public function lihatsemuadatabending(Request $request)
+    {
+        // Ambil tanggal dari request
+        $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
 
-            // Cari ID divisi JANFAR
-            $divisi = Divisi::where('divisi', 'BENDING')->first();
+        // Cari ID divisi JANFAR
+        $divisi = Divisi::where('divisi', 'BENDING')->first();
 
-            // Query filter berdasarkan tanggal + divisi
-            $report = ProductionReport::where('divisi_id', $divisi->id)
-                        ->whereDate('created_at', $tanggal_report)
-                        ->get();
+        // Query filter berdasarkan tanggal + divisi
+        $report = ProductionReport::where('divisi_id', $divisi->id)
+                    ->whereDate('created_at', $tanggal_report)
+                    ->get();
 
-            return view('adminppic.divisi.bending', compact('report', 'tanggal_report'));
+        return view('adminppic.divisi.bending', compact('report', 'tanggal_report'));
+    }
+
+
+    public function exportBending(Request $request)
+    {
+        $title = "Laporan Produksi Divisi Bending";
+
+        $divisi = Divisi::where('divisi', 'BENDING')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('created_at', [
+                $request->tanggal_awal . " 00:00:00",
+                $request->tanggal_akhir . " 23:59:59"
+            ]);
         }
 
+        $report = $query->get(); // ambil data di akhir
 
-        public function press()
+        return response()->view('adminppic.divisi.export.export_divisi', compact('report', 'title'))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', "attachment; filename=laporan_bending.xls")
+            ->header('Cache-Control', 'no-cache, must-revalidate')
+            ->header('Pragma', 'no-cache');
+    }
+
+
+    public function press()
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'PRESS')->first();
@@ -237,24 +333,47 @@ class AdminPPICController extends Controller
         return view('adminppic.divisi.press', compact('report'));
     }
 
-        public function lihatsemuadatapress(Request $request)
-        {
-            // Ambil tanggal dari request
-            $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
+    public function lihatsemuadatapress(Request $request)
+    {
+        // Ambil tanggal dari request
+        $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
 
-            // Cari ID divisi JANFAR
-            $divisi = Divisi::where('divisi', 'PRESS')->first();
+        // Cari ID divisi JANFAR
+        $divisi = Divisi::where('divisi', 'PRESS')->first();
 
-            // Query filter berdasarkan tanggal + divisi
-            $report = ProductionReport::where('divisi_id', $divisi->id)
-                        ->whereDate('created_at', $tanggal_report)
-                        ->get();
+        // Query filter berdasarkan tanggal + divisi
+        $report = ProductionReport::where('divisi_id', $divisi->id)
+                    ->whereDate('created_at', $tanggal_report)
+                    ->get();
 
-            return view('adminppic.divisi.press', compact('report', 'tanggal_report'));
+        return view('adminppic.divisi.press', compact('report', 'tanggal_report'));
+    }
+
+    public function exportPress(Request $request)
+    {
+        $title = "Laporan Produksi Divisi Press";
+
+        $divisi = Divisi::where('divisi', 'PRESS')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('created_at', [
+                $request->tanggal_awal . " 00:00:00",
+                $request->tanggal_akhir . " 23:59:59"
+            ]);
         }
 
+        $report = $query->get(); // ambil data di akhir
 
-        public function racking()
+        return response()->view('adminppic.divisi.export.export_divisi', compact('report', 'title'))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', "attachment; filename=laporan_press.xls")
+            ->header('Cache-Control', 'no-cache, must-revalidate')
+            ->header('Pragma', 'no-cache');
+    }
+
+
+    public function racking()
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'RACKING')->first();
@@ -265,24 +384,48 @@ class AdminPPICController extends Controller
         return view('adminppic.divisi.racking', compact('report'));
     }
 
-        public function lihatsemuadataracking(Request $request)
-        {
-            // Ambil tanggal dari request
-            $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
+    public function lihatsemuadataracking(Request $request)
+    {
+        // Ambil tanggal dari request
+        $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
 
-            // Cari ID divisi JANFAR
-            $divisi = Divisi::where('divisi', 'RACKING')->first();
+        // Cari ID divisi JANFAR
+        $divisi = Divisi::where('divisi', 'RACKING')->first();
 
-            // Query filter berdasarkan tanggal + divisi
-            $report = ProductionReport::where('divisi_id', $divisi->id)
-                        ->whereDate('created_at', $tanggal_report)
-                        ->get();
+        // Query filter berdasarkan tanggal + divisi
+        $report = ProductionReport::where('divisi_id', $divisi->id)
+                    ->whereDate('created_at', $tanggal_report)
+                    ->get();
 
-            return view('adminppic.divisi.racking', compact('report', 'tanggal_report'));
+        return view('adminppic.divisi.racking', compact('report', 'tanggal_report'));
+    }
+
+
+    public function exportRacking(Request $request)
+    {
+        $title = "Laporan Produksi Divisi Racking";
+
+        $divisi = Divisi::where('divisi', 'RACKING')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('created_at', [
+                $request->tanggal_awal . " 00:00:00",
+                $request->tanggal_akhir . " 23:59:59"
+            ]);
         }
 
+        $report = $query->get(); // ambil data di akhir
 
-        public function rollforming()
+        return response()->view('adminppic.divisi.export.export_divisi', compact('report', 'title'))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', "attachment; filename=laporan_racking.xls")
+            ->header('Cache-Control', 'no-cache, must-revalidate')
+            ->header('Pragma', 'no-cache');
+    }
+
+
+    public function rollforming()
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'ROLL FORMING')->first();
@@ -293,24 +436,48 @@ class AdminPPICController extends Controller
         return view('adminppic.divisi.rollforming', compact('report'));
     }
 
-        public function lihatsemuadatarollforming(Request $request)
-        {
-            // Ambil tanggal dari request
-            $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
+    public function lihatsemuadatarollforming(Request $request)
+    {
+        // Ambil tanggal dari request
+        $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
 
-            // Cari ID divisi JANFAR
-            $divisi = Divisi::where('divisi', 'ROLL FORMING')->first();
+        // Cari ID divisi JANFAR
+        $divisi = Divisi::where('divisi', 'ROLL FORMING')->first();
 
-            // Query filter berdasarkan tanggal + divisi
-            $report = ProductionReport::where('divisi_id', $divisi->id)
-                        ->whereDate('created_at', $tanggal_report)
-                        ->get();
+        // Query filter berdasarkan tanggal + divisi
+        $report = ProductionReport::where('divisi_id', $divisi->id)
+                    ->whereDate('created_at', $tanggal_report)
+                    ->get();
 
-            return view('adminppic.divisi.rollforming', compact('report', 'tanggal_report'));
+        return view('adminppic.divisi.rollforming', compact('report', 'tanggal_report'));
+    }
+
+
+    public function exportrollForming(Request $request)
+    {
+        $title = "Laporan Produksi Divisi Roll Forming";
+
+        $divisi = Divisi::where('divisi', 'ROLL FORMING')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('created_at', [
+                $request->tanggal_awal . " 00:00:00",
+                $request->tanggal_akhir . " 23:59:59"
+            ]);
         }
 
+        $report = $query->get(); // ambil data di akhir
 
-        public function spotwelding()
+        return response()->view('adminppic.divisi.export.export_divisi', compact('report', 'title'))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', "attachment; filename=laporan_rollforming.xls")
+            ->header('Cache-Control', 'no-cache, must-revalidate')
+            ->header('Pragma', 'no-cache');
+    }
+
+
+    public function spotwelding()
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'SPOT WELDING')->first();
@@ -321,24 +488,48 @@ class AdminPPICController extends Controller
         return view('adminppic.divisi.spotwelding', compact('report'));
     }
 
-        public function lihatsemuadataspotwelding(Request $request)
-        {
-            // Ambil tanggal dari request
-            $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
+    public function lihatsemuadataspotwelding(Request $request)
+    {
+        // Ambil tanggal dari request
+        $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
 
-            // Cari ID divisi JANFAR
-            $divisi = Divisi::where('divisi', 'SPOT WELDING')->first();
+        // Cari ID divisi JANFAR
+        $divisi = Divisi::where('divisi', 'SPOT WELDING')->first();
 
-            // Query filter berdasarkan tanggal + divisi
-            $report = ProductionReport::where('divisi_id', $divisi->id)
-                        ->whereDate('created_at', $tanggal_report)
-                        ->get();
+        // Query filter berdasarkan tanggal + divisi
+        $report = ProductionReport::where('divisi_id', $divisi->id)
+                    ->whereDate('created_at', $tanggal_report)
+                    ->get();
 
-            return view('adminppic.divisi.spotwelding', compact('report', 'tanggal_report'));
+        return view('adminppic.divisi.spotwelding', compact('report', 'tanggal_report'));
+    }
+
+
+    public function exportSpotWelding(Request $request)
+    {
+        $title = "Laporan Produksi Divisi Spot Welding";
+
+        $divisi = Divisi::where('divisi', 'SPOT WELDING')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('created_at', [
+                $request->tanggal_awal . " 00:00:00",
+                $request->tanggal_akhir . " 23:59:59"
+            ]);
         }
 
+        $report = $query->get(); // ambil data di akhir
 
-        public function weldingaccesoris()
+        return response()->view('adminppic.divisi.export.export_divisi', compact('report', 'title'))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', "attachment; filename=laporan_spotwelding.xls")
+            ->header('Cache-Control', 'no-cache, must-revalidate')
+            ->header('Pragma', 'no-cache');
+    }
+
+
+    public function weldingaccesoris()
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'WELDING ACCESORIS')->first();
@@ -349,24 +540,48 @@ class AdminPPICController extends Controller
         return view('adminppic.divisi.weldingaccesoris', compact('report'));
     }
 
-        public function lihatsemuadataweldingaccesoris(Request $request)
-        {
-            // Ambil tanggal dari request
-            $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
+    public function lihatsemuadataweldingaccesoris(Request $request)
+    {
+        // Ambil tanggal dari request
+        $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
 
-            // Cari ID divisi JANFAR
-            $divisi = Divisi::where('divisi', 'WELDING ACCESORIS')->first();
+        // Cari ID divisi JANFAR
+        $divisi = Divisi::where('divisi', 'WELDING ACCESORIS')->first();
 
-            // Query filter berdasarkan tanggal + divisi
-            $report = ProductionReport::where('divisi_id', $divisi->id)
-                        ->whereDate('created_at', $tanggal_report)
-                        ->get();
+        // Query filter berdasarkan tanggal + divisi
+        $report = ProductionReport::where('divisi_id', $divisi->id)
+                    ->whereDate('created_at', $tanggal_report)
+                    ->get();
 
-            return view('adminppic.divisi.weldingaccesoris', compact('report', 'tanggal_report'));
+        return view('adminppic.divisi.weldingaccesoris', compact('report', 'tanggal_report'));
+    }
+
+    public function exportWeldingAccesoris(Request $request)
+    {
+        $title = "Laporan Produksi Divisi Welding Accesoris";
+
+        $divisi = Divisi::where('divisi', 'WELDING ACCESORIS')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('created_at', [
+                $request->tanggal_awal . " 00:00:00",
+                $request->tanggal_akhir . " 23:59:59"
+            ]);
         }
 
+        $report = $query->get(); // ambil data di akhir
 
-        public function weldingshofiting1()
+        return response()->view('adminppic.divisi.export.export_divisi', compact('report', 'title'))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', "attachment; filename=laporan_weldingaccesoris.xls")
+            ->header('Cache-Control', 'no-cache, must-revalidate')
+            ->header('Pragma', 'no-cache');
+    }
+
+
+
+    public function weldingshofiting1()
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'WELDING SHOFITING 1')->first();
@@ -377,24 +592,48 @@ class AdminPPICController extends Controller
         return view('adminppic.divisi.weldingshofting1', compact('report'));
     }
 
-        public function lihatsemuadataweldingshofiting1(Request $request)
-        {
-            // Ambil tanggal dari request
-            $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
+    public function lihatsemuadataweldingshofiting1(Request $request)
+    {
+        // Ambil tanggal dari request
+        $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
 
-            // Cari ID divisi JANFAR
-            $divisi = Divisi::where('divisi', 'WELDING SHOFITING 1')->first();
+        // Cari ID divisi JANFAR
+        $divisi = Divisi::where('divisi', 'WELDING SHOFITING 1')->first();
 
-            // Query filter berdasarkan tanggal + divisi
-            $report = ProductionReport::where('divisi_id', $divisi->id)
-                        ->whereDate('created_at', $tanggal_report)
-                        ->get();
+        // Query filter berdasarkan tanggal + divisi
+        $report = ProductionReport::where('divisi_id', $divisi->id)
+                    ->whereDate('created_at', $tanggal_report)
+                    ->get();
 
-            return view('adminppic.divisi.weldingshofting1', compact('report', 'tanggal_report'));
+        return view('adminppic.divisi.weldingshofting1', compact('report', 'tanggal_report'));
+    }
+
+
+    public function exportWeldingShofiting1(Request $request)
+    {
+        $title = "Laporan Produksi Divisi Welding Shofiting 1";
+
+        $divisi = Divisi::where('divisi', 'WELDING SHOFITING 1')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('created_at', [
+                $request->tanggal_awal . " 00:00:00",
+                $request->tanggal_akhir . " 23:59:59"
+            ]);
         }
 
+        $report = $query->get(); // ambil data di akhir
 
-        public function weldingshofiting2()
+        return response()->view('adminppic.divisi.export.export_divisi', compact('report', 'title'))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', "attachment; filename=laporan_weldingshofiting1.xls")
+            ->header('Cache-Control', 'no-cache, must-revalidate')
+            ->header('Pragma', 'no-cache');
+    }
+
+
+    public function weldingshofiting2()
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'WELDING SHOFITING 2')->first();
@@ -405,24 +644,47 @@ class AdminPPICController extends Controller
         return view('adminppic.divisi.weldingshofting2', compact('report'));
     }
 
-        public function lihatsemuadataweldingshofiting2(Request $request)
-        {
-            // Ambil tanggal dari request
-            $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
+    public function lihatsemuadataweldingshofiting2(Request $request)
+    {
+        // Ambil tanggal dari request
+        $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
 
-            // Cari ID divisi JANFAR
-            $divisi = Divisi::where('divisi', 'WELDING SHOFITING 2')->first();
+        // Cari ID divisi JANFAR
+        $divisi = Divisi::where('divisi', 'WELDING SHOFITING 2')->first();
 
-            // Query filter berdasarkan tanggal + divisi
-            $report = ProductionReport::where('divisi_id', $divisi->id)
-                        ->whereDate('created_at', $tanggal_report)
-                        ->get();
+        // Query filter berdasarkan tanggal + divisi
+        $report = ProductionReport::where('divisi_id', $divisi->id)
+                    ->whereDate('created_at', $tanggal_report)
+                    ->get();
 
-            return view('adminppic.divisi.weldingshofting2', compact('report', 'tanggal_report'));
+        return view('adminppic.divisi.weldingshofting2', compact('report', 'tanggal_report'));
+    }
+
+    public function exportWeldingShofiting2(Request $request)
+    {
+        $title = "Laporan Produksi Divisi Welding Shofiting 2";
+
+        $divisi = Divisi::where('divisi', 'WELDING SHOFITING 2')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('created_at', [
+                $request->tanggal_awal . " 00:00:00",
+                $request->tanggal_akhir . " 23:59:59"
+            ]);
         }
 
+        $report = $query->get(); // ambil data di akhir
 
-        public function weldingdoor()
+        return response()->view('adminppic.divisi.export.export_divisi', compact('report', 'title'))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', "attachment; filename=laporan_weldingshofiting2.xls")
+            ->header('Cache-Control', 'no-cache, must-revalidate')
+            ->header('Pragma', 'no-cache');
+    }
+
+
+    public function weldingdoor()
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'WELDING DOOR')->first();
@@ -433,20 +695,43 @@ class AdminPPICController extends Controller
         return view('adminppic.divisi.weldingdoor', compact('report'));
     }
 
-        public function lihatsemuadataweldingdoor(Request $request)
-        {
-            // Ambil tanggal dari request
-            $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
+    public function lihatsemuadataweldingdoor(Request $request)
+    {
+        // Ambil tanggal dari request
+        $tanggal_report = Carbon::parse($request->tanggal_report)->toDateString();
 
-            // Cari ID divisi JANFAR
-            $divisi = Divisi::where('divisi', 'WELDING DOOR')->first();
+        // Cari ID divisi JANFAR
+        $divisi = Divisi::where('divisi', 'WELDING DOOR')->first();
 
-            // Query filter berdasarkan tanggal + divisi
-            $report = ProductionReport::where('divisi_id', $divisi->id)
-                        ->whereDate('created_at', $tanggal_report)
-                        ->get();
+        // Query filter berdasarkan tanggal + divisi
+        $report = ProductionReport::where('divisi_id', $divisi->id)
+                    ->whereDate('created_at', $tanggal_report)
+                    ->get();
 
-            return view('adminppic.divisi.weldingdoor', compact('report', 'tanggal_report'));
+        return view('adminppic.divisi.weldingdoor', compact('report', 'tanggal_report'));
+    }
+
+    public function exportWeldingDoor(Request $request)
+    {
+        $title = "Laporan Produksi Divisi Welding Door";
+
+        $divisi = Divisi::where('divisi', 'WELDING DOOR')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
+            $query->whereBetween('created_at', [
+                $request->tanggal_awal . " 00:00:00",
+                $request->tanggal_akhir . " 23:59:59"
+            ]);
         }
+
+        $report = $query->get(); // ambil data di akhir
+
+        return response()->view('adminppic.divisi.export.export_divisi', compact('report', 'title'))
+            ->header('Content-Type', 'application/vnd.ms-excel')
+            ->header('Content-Disposition', "attachment; filename=laporan_weldingdoor.xls")
+            ->header('Cache-Control', 'no-cache, must-revalidate')
+            ->header('Pragma', 'no-cache');
+    }
 
 }

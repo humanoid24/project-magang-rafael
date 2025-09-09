@@ -12,9 +12,39 @@
 </form>
 
 
+<div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exportModalLabel">Export Laporan Sawing</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+      </div>
+      <div class="modal-body">
+        <form method="GET" action="{{ route('ppic.export.sawing') }}">
+            <div class="mb-3">
+                <label for="tanggal_awal" class="form-label">Tanggal Awal</label>
+                <input type="date" class="form-control" id="tanggal_awal" name="tanggal_awal" required>
+            </div>
+            <div class="mb-3">
+                <label for="tanggal_akhir" class="form-label">Tanggal Akhir</label>
+                <input type="date" class="form-control" id="tanggal_akhir" name="tanggal_akhir" required>
+            </div>
+            <button type="submit" class="btn btn-success">Export</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <a href="{{ route('ppic.create') }}" class="btn btn-primary mb-3">+ Tambah Kerja</a>
+        <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#exportModal">
+            Export Excel
+        </button>
     </div>
 
     <div class="card-body">
@@ -27,16 +57,20 @@
                         <th>Customer</th>
                         <th>PDO CRD</th>
                         <th>Item Name</th>
-                        <th>PDO CRD</th>
-                        <th>Item</th>
-                        <th>PDO CRD</th>
-                        <th>Actual</th>
+                        <th>QTY</th>
+                        <th>WEIGHT/PCS</th>
+                        <th>WEIGHT TOTAL</th>
 
                         <th>Shift</th>
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
+                        <th>Lama Kerja</th>
+
                         <th>Workstation</th>
                         <th>Mesin</th>
+
+                        <th>Actual</th>
+
                         <th>Catatan</th>
                         <th>Aksi</th>
                     </tr>
@@ -51,14 +85,19 @@
                             <td>{{ $item->item_name }}</td>
                             <td>{{ $item->pdoc_n }}</td>
                             <td>{{ $item->item }}</td>
-                            <td>{{ $item->pdoc_m }}</td>
-                            <td>{{ $item->actual }}</td>
+                            <td>{{ $item->pdoc_n * $item->item }}</td>
 
                             <td>{{ $item->shift }}</td>
                             <td>{{ $item->mulai_kerja }}</td>
                             <td>{{ $item->selesai_kerja }}</td>
+                            <td>
+                                {{ \Carbon\Carbon::parse($item->mulai_kerja)->diffInMinutes(\Carbon\Carbon::parse($item->selesai_kerja)) }} menit
+                            </td>
                             <td>{{ $item->bagian }}</td>
                             <td>{{ $item->sub_bagian }}</td>
+                            
+                            <td>{{ $item->actual }}</td>
+
                             <td>{{ $item->catatan }}</td>
 
                             <td>

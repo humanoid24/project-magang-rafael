@@ -26,16 +26,19 @@
                         <th>Customer</th>
                         <th>PDO CRD</th>
                         <th>Item Name</th>
-                        <th>PDO N</th>
-                        <th>Item</th>
-                        <th>PDO M</th>
-                        <th>Actual</th>
+                        <th>QTY</th>
+                        <th>WEIGHT/PCS</th>
+                        <th>WEIGHT TOTAL</th>
 
                         <th>Shift</th>
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
+                        <th>Lama Kerja</th>
                         <th>Workstation</th>
                         <th>Mesin</th>
+
+                        <th>Actual</th>
+
                         <th>Catatan</th>
                         <th>Aksi</th>
                     </tr>
@@ -50,6 +53,26 @@
                             <td>{{ $pekerja->item_name }}</td>
                             <td>{{ $pekerja->pdoc_n }}</td>
                             <td>{{ $pekerja->item }}</td>
+                            <td>{{ $pekerja->pdoc_n * $pekerja->item }}</td>
+
+                            <td>{{ $pekerja->shift }}</td>
+                            <td>{{ $pekerja->mulai_kerja }}</td>
+                            <td>{{ $pekerja->selesai_kerja }}</td>
+                            <td>
+                                {{ \Carbon\Carbon::parse($pekerja->mulai_kerja)->diffInMinutes(\Carbon\Carbon::parse($pekerja->selesai_kerja)) }} menit
+                            </td>
+                            <td>{{ $pekerja->bagian }}</td>
+                            <td>{{ $pekerja->sub_bagian }}</td>
+                            
+                            <td>{{ $pekerja->actual }}</td>
+
+                            <td>{{ $pekerja->catatan }}</td>
+                            {{-- <td>{{ $pekerja->so_no }}</td>
+                            <td>{{ $pekerja->customer }}</td>
+                            <td>{{ $pekerja->pdo_crd }}</td>
+                            <td>{{ $pekerja->item_name }}</td>
+                            <td>{{ $pekerja->pdoc_n }}</td>
+                            <td>{{ $pekerja->item }}</td>
                             <td>{{ $pekerja->pdoc_m }}</td>
                             <td>{{ $pekerja->actual }}</td>
                             @if(isAdmin())
@@ -58,9 +81,13 @@
                             <td>{{ $pekerja->shift }}</td>
                             <td>{{ $pekerja->mulai_kerja }}</td>
                             <td>{{ $pekerja->selesai_kerja }}</td>
+                            <td>
+                                {{ \Carbon\Carbon::parse($pekerja->mulai_kerja)->diffInMinutes(\Carbon\Carbon::parse($pekerja->selesai_kerja)) }} menit
+                            </td>
+
                             <td>{{ $pekerja->bagian }}</td>
                             <td>{{ $pekerja->sub_bagian }}</td>
-                            <td>{{ $pekerja->catatan }}</td>
+                            <td>{{ $pekerja->catatan }}</td> --}}
                             <td>
                                 @if (isPekerja())
                                 <a href="{{ route('dashboard.edit', $pekerja->id) }}" class="btn btn-sm btn-warning">Tambah Laporan / Edit Laporan</a>       

@@ -35,18 +35,18 @@
 
                         <div class="form-group">
                             <label for="pdoc_n">PDO CRD</label>
-                            <input type="text" name="pdoc_n" class="form-control" value="{{ old('pdoc_n', $report->pdoc_n) }}" required>
+                            <input type="number" name="pdoc_n" class="form-control" value="{{ old('pdoc_n', $report->pdoc_n) }}" required>
                         </div>
 
                         <div class="form-group">
                             <label for="item">ITEM</label>
-                            <input type="text" name="item" class="form-control" value="{{ old('item', $report->item) }}" required>
+                            <input type="number" name="item" class="form-control" value="{{ old('item', $report->item) }}" required>
                         </div>
 
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="pdoc_m">PDO CRD</label>
                             <input type="text" name="pdoc_m" class="form-control" value="{{ old('pdoc_m', $report->pdoc_m) }}" required>
-                        </div>
+                        </div> --}}
 
                         <div class="form-group">
                             <label for="actual">ACTUAL</label>

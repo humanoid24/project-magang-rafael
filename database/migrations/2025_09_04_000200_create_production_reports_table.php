@@ -18,15 +18,15 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('divisis')
                 ->nullOnDelete();
-            $table->string('so_no');
+            $table->string('so_no')->nullable();
             // $table->dateTime('tanggal');
-            $table->string('customer');
-            $table->string('pdo_crd');
-            $table->string('item_name');
-            $table->string('pdoc_n');
-            $table->string('item');
-            $table->string('pdoc_m');
-            $table->string('actual');
+            $table->string('customer')->nullable();
+            $table->string('pdo_crd')->nullable();
+            $table->string('item_name')->nullable();
+            $table->integer('pdoc_n')->nullable();
+            $table->integer('item')->nullable();
+            $table->string('pdoc_m')->nullable();
+            $table->string('actual')->nullable();
             $table->integer('shift')->nullable();
             $table->dateTime('mulai_kerja')->nullable();
             $table->dateTime('selesai_kerja')->nullable();
