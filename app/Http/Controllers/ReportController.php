@@ -24,11 +24,6 @@ class ReportController extends Controller
             return view('report.index', compact('report'));
         }
 
-        if ($user->role === 3) {
-            // Admin PPIC: masuk ke halaman khusus PPIC
-            return redirect()->route('ppic.index');
-        }
-
         if ($user->role === 2) {
             $report = ProductionReport::where('divisi_id', $user->divisi_id)
                 ->get();

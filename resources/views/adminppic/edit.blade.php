@@ -34,12 +34,12 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="pdoc_n">PDO CRD</label>
+                            <label for="pdoc_n">QTY</label>
                             <input type="number" name="pdoc_n" class="form-control" value="{{ old('pdoc_n', $report->pdoc_n) }}" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="item">ITEM</label>
+                            <label for="item">WEIGHT/PCS</label>
                             <input type="number" name="item" class="form-control" value="{{ old('item', $report->item) }}" required>
                         </div>
 
