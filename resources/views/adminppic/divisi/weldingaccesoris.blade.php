@@ -2,14 +2,34 @@
 
 @section('content')
 <h1 class="h3 mb-2 text-gray-800 text-center">Table Kerja Welding Accesoris</h1>
-<form method="GET" action="{{ route('ppic.weldingaccesoris') }}">
-    <div class="form-group">
-        <label for="tanggal_report">Tanggal</label>
-        <input type="date" id="tanggal_report" name="tanggal_report" 
-            class="form-control" value="{{ request('tanggal_report') }}">
+
+
+<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="filterModalLabel">Filter Laporan</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="GET" action="{{ route('ppic.weldingaccesoris.filter') }}">
+          <div class="form-group">
+            <label for="tanggal_report">Tanggal Awal</label>
+            <input type="date" id="tanggal_report" name="tanggal_report" class="form-control" value="{{ request('tanggal_report') }}">
+          </div>
+
+        <div class="form-group">
+            <label for="tanggal_report">Tanggal Akhir</label>
+            <input type="date" id="tanggal_report" name="tanggal_report_akhir" class="form-control" value="{{ request('tanggal_report_akhir') }}">
+          </div>
+          <button type="submit" class="btn btn-primary mt-2">Filter</button>
+        </form>
+      </div>
     </div>
-    <button type="submit" class="btn btn-primary mt-2">Filter</button>
-</form>
+  </div>
+</div>
 
 
 <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
@@ -44,6 +64,9 @@
         <a href="{{ route('ppic.create') }}" class="btn btn-primary mb-3">+ Tambah Kerja</a>
         <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#exportModal">
             Export Excel
+        </button>
+        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#filterModal">
+            Filter Tanggal
         </button>
     </div>
 

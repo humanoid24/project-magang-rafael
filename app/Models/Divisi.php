@@ -10,7 +10,7 @@ class Divisi extends Model
 
 
 
-        public function ppics() {
+    public function ppics() {
         return $this->hasMany(Ppic::class);
     }
 
