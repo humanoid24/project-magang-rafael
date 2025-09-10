@@ -24,6 +24,10 @@ class ReportController extends Controller
             return view('report.index', compact('report'));
         }
 
+        if ($user->role === 3) {
+            return view('adminppic.dashboard');
+        }
+
         if ($user->role === 2) {
             $report = ProductionReport::where('divisi_id', $user->divisi_id)
                 ->get();
