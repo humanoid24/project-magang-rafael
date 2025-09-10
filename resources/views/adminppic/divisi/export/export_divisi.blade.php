@@ -27,7 +27,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($report as $row)
+            @foreach($report as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->so_no }}</td>
