@@ -95,7 +95,7 @@
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
                         <th>Lama Kerja</th>
-                        <th>Workstation</th>
+                        <th>Divisi</th>
                         <th>Mesin</th>
 
                         <th>Actual</th>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="h3 mb-2 text-gray-800 text-center">Table Kerja janfar</h1>
+<h1 class="h3 mb-2 text-gray-800 text-center">Table Kerja Janfar</h1>
 
 <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -87,7 +87,7 @@
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
                         <th>Lama Kerja</th>
-                        <th>Workstation</th>
+                        <th>Divisi</th>
                         <th>Mesin</th>
 
                         <th>Actual</th>
