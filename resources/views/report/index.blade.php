@@ -34,7 +34,7 @@
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
                         <th>Lama Kerja</th>
-                        <th>Workstation</th>
+                        <th>Divisi</th>
                         <th>Mesin</th>
 
                         <th>Actual</th>
@@ -48,7 +48,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             @if(isAdmin())
-                                <th>{{ $pekerja->user->name }}</th>
+                        <th>{{ optional($pekerja->user)->name ?? '-' }}</th>
                             @endif
                             <td>{{ $pekerja->so_no }}</td>
                             <td>{{ $pekerja->customer }}</td>

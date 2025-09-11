@@ -20,7 +20,7 @@
             <div class="mb-4">
               <i class="bi bi-person-circle" style="font-size: 3rem; color: #2575fc;"></i>
               <h2 class="fw-bold mt-2 text-dark">Login</h2>
-              <p class="text-muted">Masukkan Email dan Password kamu</p>
+              <p class="text-muted">Masukkan Email dan Password anda</p>
             </div>
 
             @if(session('message'))
