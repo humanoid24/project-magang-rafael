@@ -82,7 +82,7 @@
                         <th>QTY</th>
                         <th>WEIGHT/PCS</th>
                         <th>WEIGHT TOTAL</th>
-
+                        <th>Nama Pekerja</th>
                         <th>Shift</th>
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
@@ -107,6 +107,7 @@
                             <td>{{ $item->pdoc_n }}</td>
                             <td>{{ rtrim(rtrim($item->item, '0'), '.') }}</td>
                             <td>{{ $item->pdoc_n * $item->item }}</td>
+                            <td>{{ optional($item->user)->name ?? '-' }}</td>
 
                             <td>{{ $item->shift }}</td>
                             <td>{{ $item->mulai_kerja }}</td>
