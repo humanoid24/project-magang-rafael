@@ -23,9 +23,9 @@ return new class extends Migration
             $table->string('customer')->nullable();
             $table->string('pdo_crd')->nullable();
             $table->string('item_name')->nullable();
-            $table->integer('pdoc_n')->nullable();
-            $table->decimal('item', 10, 2)->nullable();
-            $table->string('pdoc_m')->nullable();
+            $table->integer('qty')->nullable();
+            $table->decimal('weight_pcs', 10, 2)->nullable();
+            $table->string('weight_total')->nullable();
             $table->string('actual')->nullable();
             $table->integer('shift')->nullable();
             $table->dateTime('mulai_kerja')->nullable();

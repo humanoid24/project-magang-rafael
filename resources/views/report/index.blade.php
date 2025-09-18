@@ -34,7 +34,7 @@
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
                         <th>Lama Kerja</th>
-                        <th>Divisi</th>
+                        <th>Workcenter</th>
                         <th>Mesin</th>
 
                         <th>Actual</th>
@@ -48,15 +48,15 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             @if(isAdmin())
-                        <th>{{ optional($pekerja->user)->name ?? '-' }}</th>
+                        <th>{{ optional($pekerja->user)->name }}</th>
                             @endif
                             <td>{{ $pekerja->so_no }}</td>
                             <td>{{ $pekerja->customer }}</td>
                             <td>{{ $pekerja->pdo_crd }}</td>
                             <td>{{ $pekerja->item_name }}</td>
-                            <td>{{ $pekerja->pdoc_n }}</td>
-                            <td>{{ rtrim(rtrim($pekerja->item, '0'), '.') }}</td>
-                            <td>{{ $pekerja->pdoc_n * $pekerja->item }}</td>
+                            <td>{{ $pekerja->qty }}</td>
+                            <td>{{ rtrim(rtrim($pekerja->weight_pcs, '0'), '.') }}</td>
+                            <td>{{ $pekerja->weight_total }}</td>
 
                             <td>{{ $pekerja->shift }}</td>
                             <td>{{ $pekerja->mulai_kerja }}</td>
@@ -75,27 +75,6 @@
                             <td>{{ $pekerja->actual }}</td>
 
                             <td>{{ $pekerja->catatan }}</td>
-                            {{-- <td>{{ $pekerja->so_no }}</td>
-                            <td>{{ $pekerja->customer }}</td>
-                            <td>{{ $pekerja->pdo_crd }}</td>
-                            <td>{{ $pekerja->item_name }}</td>
-                            <td>{{ $pekerja->pdoc_n }}</td>
-                            <td>{{ $pekerja->item }}</td>
-                            <td>{{ $pekerja->pdoc_m }}</td>
-                            <td>{{ $pekerja->actual }}</td>
-                            @if(isAdmin())
-                                <td>{{ $pekerja->user->name ?? '-' }}</td>
-                            @endif
-                            <td>{{ $pekerja->shift }}</td>
-                            <td>{{ $pekerja->mulai_kerja }}</td>
-                            <td>{{ $pekerja->selesai_kerja }}</td>
-                            <td>
-                                {{ \Carbon\Carbon::parse($pekerja->mulai_kerja)->diffInMinutes(\Carbon\Carbon::parse($pekerja->selesai_kerja)) }} menit
-                            </td>
-
-                            <td>{{ $pekerja->bagian }}</td>
-                            <td>{{ $pekerja->sub_bagian }}</td>
-                            <td>{{ $pekerja->catatan }}</td> --}}
                             <td>
                                 @if (isPekerja())
                                 <a href="{{ route('dashboard.edit', $pekerja->id) }}" class="btn btn-sm btn-warning">Tambah Laporan / Edit Laporan</a>       

@@ -43,13 +43,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="pdoc_n">QTY</label>
-                            <input type="number" name="pdoc_n" class="form-control" required>
+                            <label for="qty">QTY</label>
+                            <input type="number" name="qty" class="form-control" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="item">WEIGHT/PCS</label>
-                            <input type="number" name="item" class="form-control" step="0.01" required>
+                            <label for="weight_pcs">WEIGHT/PCS</label>
+                            <input type="number" name="weight_pcs" class="form-control" step="0.01" required>
                         </div>
 
                         {{-- <div class="form-group">
