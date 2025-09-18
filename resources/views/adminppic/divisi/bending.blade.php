@@ -68,13 +68,14 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <a href="{{ route('ppic.create') }}" class="btn btn-primary mb-3">+ Tambah Kerja</a>
+        {{-- <a href="{{ route('ppic.create') }}" class="btn btn-primary mb-3">+ Tambah Kerja</a> --}}
         <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#exportModal">
             Export Excel
         </button>
         <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#filterModal">
             Filter Tanggal
         </button>
+        <a href="{{ route('ppic.import.form') }}" class="btn btn-success mb-3">+ Import Excel</a>
     </div>
 
     <div class="card-body">
@@ -96,7 +97,7 @@
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
                         <th>Lama Kerja</th>
-                        <th>Divisi</th>
+                        <th>Workcenter</th>
                         <th>Mesin</th>
 
                         <th>Actual</th>
@@ -113,9 +114,9 @@
                             <td>{{ $item->customer }}</td>
                             <td>{{ $item->pdo_crd }}</td>
                             <td>{{ $item->item_name }}</td>
-                            <td>{{ $item->pdoc_n }}</td>
-                            <td>{{ rtrim(rtrim($item->item, '0'), '.') }}</td>
-                            <td>{{ $item->pdoc_n * $item->item }}</td>
+                            <td>{{ $item->qty }}</td>
+                            <td>{{ rtrim(rtrim($item->weight_pcs, '0'), '.') }}</td>
+                            <td>{{ $item->weight_total }}</td>
                             <td>{{ optional($item->user)->name ?? '-' }}</td>
 
 

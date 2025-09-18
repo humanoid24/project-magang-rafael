@@ -56,6 +56,13 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="actual">Actual</label>
+                            <input type="text" id="actual" name="actual" 
+                                   value="{{ old('actual', $report->actual) }}" 
+                                   class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
                             <label for="notes">Catatan</label>
                             <textarea id="notes" name="catatan" class="form-control">{{ old('catatan', $report->catatan) }}</textarea>
                         </div>

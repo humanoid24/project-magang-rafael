@@ -34,13 +34,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="pdoc_n">QTY</label>
-                            <input type="number" name="pdoc_n" class="form-control" value="{{ old('pdoc_n', $report->pdoc_n) }}" required>
+                            <label for="qty">QTY</label>
+                            <input type="number" name="qty" class="form-control" value="{{ old('qty', $report->qty) }}" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="item">WEIGHT/PCS</label>
-                            <input type="number" name="item" class="form-control" value="{{ old('item', $report->item) }}" required>
+                            <label for="weight_pcs">WEIGHT/PCS</label>
+                            <input type="number" name="weight_pcs" class="form-control" step="0.01" value="{{ old('weight_pcs', $report->weight_pcs) }}" required>
                         </div>
 
                         {{-- <div class="form-group">
@@ -48,10 +48,10 @@
                             <input type="text" name="pdoc_m" class="form-control" value="{{ old('pdoc_m', $report->pdoc_m) }}" required>
                         </div> --}}
 
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="actual">ACTUAL</label>
                             <input type="text" name="actual" class="form-control" value="{{ old('actual', $report->actual) }}" required>
-                        </div>
+                        </div> --}}
 
                         <div class="text-right">
                             <button type="submit" class="btn btn-primary">Update</button>

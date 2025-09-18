@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\ProductionReportImport;
 use App\Models\Divisi;
 use App\Models\ppic;
 use App\Models\ProductionReport;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminPPICController extends Controller
 {
@@ -40,8 +42,8 @@ class AdminPPICController extends Controller
             'customer'    => 'required|string',
             'pdo_crd'     => 'required|string',
             'item_name'   => 'required|string',
-            'pdoc_n'      => 'required|string',
-            'item'        => 'required|string',
+            'qty'         => 'required|string',
+            'weight_pcs'  => 'required|string',
             'actual'      => 'nullable|string',
             'divisi_id'   => 'required|exists:divisis,id',
         ]);
@@ -77,6 +79,58 @@ class AdminPPICController extends Controller
     }
 
 
+    public function importCreate()
+    {
+        $divisis = Divisi::all();
+        return view('adminppic.createexcel', compact('divisis')); 
+    }
+
+    public function import(Request $request)
+    {
+        // Simpan hasil validasi ke variabel
+        $validatedData = $request->validate([
+            'divisi_id' => 'required|exists:divisis,id',
+            'file'      => 'required|mimes:xlsx,csv'
+        ]);
+
+        try {
+            // Import file sesuai divisi
+            Excel::import(new ProductionReportImport($validatedData['divisi_id']), $request->file('file'));
+
+            // Ambil nama divisi
+            $divisi = Divisi::findOrFail($validatedData['divisi_id']);
+            $divisiName = strtolower($divisi->divisi);
+
+            // Mapping divisi → route
+            $divisiRoutes = [
+                'janfar'            => 'ppic.janfar',
+                'sawing'            => 'ppic.sawing',
+                'cutting'           => 'ppic.cutting',
+                'bending'           => 'ppic.bending',
+                'press'             => 'ppic.press',
+                'racking'           => 'ppic.racking',
+                'rollforming'       => 'ppic.rollforming',
+                'spotwelding'       => 'ppic.spotwelding',
+                'weldingaccesoris'  => 'ppic.weldingaccesoris',
+                'weldingshofiting1' => 'ppic.weldingshofiting1',
+                'weldingshofiting2' => 'ppic.weldingshofiting2',
+                'weldingdoor'       => 'ppic.weldingdoor',
+            ];
+
+            // Ambil route sesuai divisi, fallback ke janfar kalau tidak ditemukan
+            $route = $divisiRoutes[$divisiName] ?? 'ppic.janfar';
+
+            return redirect()->route($route)
+                ->with('success', 'Data Production Report berhasil diimport!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Import gagal: ' . $e->getMessage());
+        }
+    }
+
+
+
+
+
     /**
      * Display the specified resource.
      */
@@ -105,9 +159,9 @@ class AdminPPICController extends Controller
             'customer'    => 'required|string',
             'pdo_crd'     => 'required|string',
             'item_name'   => 'required|string',
-            'pdoc_n'      => 'required|string',
-            'item'        => 'required|string',
-            'actual'      => 'nullable|string',
+            'qty'         => 'required',
+            'weight_pcs'  => 'required',
+            // 'actual'      => 'nullable|string',
         ]);
 
         // Ambil data berdasarkan id

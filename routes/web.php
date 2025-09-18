@@ -20,6 +20,8 @@ Route::get('actionlogout', [AuthController::class, 'actionLogout'])->name('actio
 
 Route::middleware('auth')->group(function () {
     Route::resource('/dashboard', ReportController::class);
+    Route::get('/ppic/import', [AdminPPICController::class, 'importCreate'])->name('ppic.import.form');
+    Route::post('/ppic/import', [AdminPPICController::class, 'import'])->name('ppic.import.process');
     Route::resource('/ppic', AdminPPICController::class);
 
     Route::get('/ppic-janfar', [AdminPPICController::class, 'janfar'])->name('ppic.janfar');

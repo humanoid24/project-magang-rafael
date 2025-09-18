@@ -13,9 +13,9 @@ class ProductionReport extends Model
         'customer',
         'pdo_crd',
         'item_name',
-        'pdoc_n',
-        'item',
-        'pdoc_m',
+        'qty',
+        'weight_pcs',
+        'weight_total',
         'actual',
         'divisi_id',];
 

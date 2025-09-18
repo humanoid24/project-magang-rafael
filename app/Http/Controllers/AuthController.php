@@ -14,8 +14,8 @@ class AuthController extends Controller
     // Register
     public function showRegister()
     {
-        $divisis = Divisi::all();
-        return view('auth.daftar', compact('divisis'));
+        // $divisis = Divisi::all();
+        return view('auth.daftar');
     }
 
     public function actionRegister(Request $request)
@@ -24,7 +24,7 @@ class AuthController extends Controller
             'email' => 'required|max:255|email|unique:users',
             'name' => 'required|max:255',
             'password' => 'required|min:4|confirmed',
-            'divisi_id' => 'required|exists:divisis,id',
+            // 'divisi_id' => 'required|exists:divisis,id',
         ], [
             'email.unique' => 'Email tidak boleh sama',
             'password.min' => 'Password minimal 4 karakter.',
@@ -35,7 +35,7 @@ class AuthController extends Controller
             'email' => $validate['email'],
             'name' => $validate['name'],
             'role' => 2,
-            'divisi_id' => $validate['divisi_id'],
+            // 'divisi_id' => $validate['divisi_id'],
             'password' => Hash::make($validate['password']),
         ]);
 
