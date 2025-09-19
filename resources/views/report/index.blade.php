@@ -13,8 +13,18 @@
     </div> --}}
 
     <div class="card-body">
+        <div class="d-flex justify-content-end mb-3">
+                <!-- Search Form -->
+                <form method="GET" action="{{ route('dashboard.index') }}" class="d-flex" role="search">
+                    <input type="text" name="search" value="{{ request('search') }}" 
+                        class="form-control form-control-sm me-2" 
+                        placeholder="Cari..." 
+                        style="max-width: 220px;">
+                    <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
+                </form>
+        </div>
         <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <table class="table table-bordered" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -46,9 +56,9 @@
                 <tbody>
                     @foreach($report as $pekerja)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ ($report->currentPage() - 1) * $report->perPage() + $loop->iteration }}</td>
                             @if(isAdmin())
-                        <th>{{ optional($pekerja->user)->name }}</th>
+                            <th>{{ optional($pekerja->user)->name }}</th>
                             @endif
                             <td>{{ $pekerja->so_no }}</td>
                             <td>{{ $pekerja->customer }}</td>
@@ -92,6 +102,9 @@
                     @endforeach
                 </tbody>
             </table>
+            <div class="d-flex justify-content-end mt-3">
+                {{ $report->links('pagination::bootstrap-4') }}
+            </div>
         </div>
     </div>
 </div>

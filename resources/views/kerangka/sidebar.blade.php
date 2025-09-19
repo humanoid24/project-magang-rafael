@@ -14,7 +14,7 @@
         <span>Dashboard</span></a>
 </li>
 
-@if (in_array(Auth::user()->role, [1, 3]))
+
 
 <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
@@ -112,7 +112,6 @@
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Welding Door</span></a>
 </li> --}}
-@endif
 
 
 
