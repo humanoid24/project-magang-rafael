@@ -7,6 +7,7 @@ use App\Models\ProductionReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class ReportController extends Controller
 {
@@ -14,13 +15,26 @@ class ReportController extends Controller
      * Display a listing of the resource.
      */
 
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
+        $query = ProductionReport::query();
+
         if ($user->role === 1) {
-            // Admin: semua report
-            $report = ProductionReport::all();
+            // Search filter (semua kolom)
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $columns = Schema::getColumnListing('production_reports'); // nama tabel
+
+                $query->where(function ($q) use ($columns, $search) {
+                    foreach ($columns as $column) {
+                        $q->orWhere($column, 'like', "%{$search}%");
+                    }
+                });
+            }
+
+            $report = $query->paginate(10)->appends($request->all());
             return view('report.index', compact('report'));
         }
 
@@ -29,13 +43,10 @@ class ReportController extends Controller
         }
 
         if ($user->role === 2) {
-            // $report = ProductionReport::where('divisi_id', $user->divisi_id)
-            //     ->get();
-            $report = ProductionReport::all();
-
-            return view('report.index', compact('report'));
+            return view('adminppic.dashboard');
         }
     }
+
 
 
 
@@ -108,7 +119,7 @@ class ReportController extends Controller
             'selesai_kerja' => 'required|date|after_or_equal:mulai_kerja',
             'bagian' => 'required',
             'sub_bagian' => 'required',
-            'actual' =>'required',
+            'actual' => 'required',
             'catatan' => 'nullable|string',
         ]);
 
@@ -117,8 +128,31 @@ class ReportController extends Controller
         $report = ProductionReport::findOrFail($id);
         $report->update($validatedData);
 
-        return redirect()->route('dashboard.index')->with('success', 'Laporan berhasil diperbarui!');
+        // Ambil divisi dari laporan
+        $divisiName = strtolower(str_replace(' ', '', $report->divisi->divisi));
+
+        // Mapping divisi → route
+        $divisiRoutes = [
+            'janfar'           => 'ppic.janfar',
+            'sawing'           => 'ppic.sawing',
+            'cutting'          => 'ppic.cutting',
+            'bending'          => 'ppic.bending',
+            'press'            => 'ppic.press',
+            'racking'          => 'ppic.racking',
+            'rollforming'      => 'ppic.rollforming',
+            'spotwelding'      => 'ppic.spotwelding',
+            'weldingaccesoris' => 'ppic.weldingaccesoris',
+            'weldingshofiting1' => 'ppic.weldingshofiting1',
+            'weldingshofiting2' => 'ppic.weldingshofiting2',
+            'weldingdoor'      => 'ppic.weldingdoor',
+        ];
+
+        $route = $divisiRoutes[$divisiName] ?? 'dashboard.index';
+
+        return redirect()->route($route)
+            ->with('success', 'Laporan berhasil diperbarui!');
     }
+
 
     /**
      * Remove the specified resource from storage.

@@ -6,13 +6,16 @@ use App\Imports\ProductionReportImport;
 use App\Models\Divisi;
 use App\Models\ppic;
 use App\Models\ProductionReport;
+use App\Traits\ReportFilter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AdminPPICController extends Controller
 {
+    use ReportFilter;
     /**
      * Display a listing of the resource.
      */
@@ -99,7 +102,7 @@ class AdminPPICController extends Controller
 
             // Ambil nama divisi
             $divisi = Divisi::findOrFail($validatedData['divisi_id']);
-            $divisiName = strtolower($divisi->divisi);
+            $divisiName = strtolower(str_replace(' ', '', $divisi->divisi));
 
             // Mapping divisi → route
             $divisiRoutes = [
@@ -118,7 +121,7 @@ class AdminPPICController extends Controller
             ];
 
             // Ambil route sesuai divisi, fallback ke janfar kalau tidak ditemukan
-            $route = $divisiRoutes[$divisiName] ?? 'ppic.janfar';
+            $route = $divisiRoutes[$divisiName] ?? 'ppic.index';
 
             return redirect()->route($route)
                 ->with('success', 'Data Production Report berhasil diimport!');
@@ -171,7 +174,7 @@ class AdminPPICController extends Controller
         $report->update($validatedData);
 
         // Ambil divisi dari data yang diupdate
-        $divisiName = strtolower($report->divisi->divisi); // pastikan relasi ProductionReport->divisi ada
+        $divisiName = strtolower(str_replace(' ', '', $report->divisi->divisi));
 
         // Mapping divisi → route
         $divisiRoutes = [
@@ -211,36 +214,43 @@ class AdminPPICController extends Controller
 
 
 
-    public function janfar()
+    public function janfar(Request $request)
     {
-    // cari divisi_id JANFAR
-    $divisi = Divisi::where('divisi', 'JANFAR')->first();
+        $divisi = Divisi::where('divisi', 'JANFAR')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
 
-    // ambil report sesuai divisi
-    $report = ProductionReport::where('divisi_id', $divisi->id)->get();
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
 
-    return view('adminppic.divisi.janfar', compact('report'));
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
+
+        return view('adminppic.divisi.janfar', compact('report'));
     }
+
 
 
     public function lihatsemuadatajanfar(Request $request)
     {
-        $tanggal_awal = $request->input('tanggal_report');  // misal 2025-08-01
-        $tanggal_akhir = $request->input('tanggal_report_akhir'); // misal 2025-09-10
+        $tanggal_awal = $request->input('tanggal_report');
+        $tanggal_akhir = $request->input('tanggal_report_akhir');
 
         $divisi = Divisi::where('divisi', 'JANFAR')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
 
-        $report = ProductionReport::where('divisi_id', $divisi->id)
-            ->when($tanggal_awal && $tanggal_akhir, function ($q) use ($tanggal_awal, $tanggal_akhir) {
-                $q->whereBetween('created_at', [
-                    Carbon::parse($tanggal_awal)->startOfDay(),
-                    Carbon::parse($tanggal_akhir)->endOfDay()
-                ]);
-            })
-            ->get();
+        // filter tanggal
+        $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.janfar', compact('report', 'tanggal_awal', 'tanggal_akhir'));
     }
+
 
     public function exportJanfar(Request $request)
     {
@@ -267,35 +277,46 @@ class AdminPPICController extends Controller
 
 
 
-    public function sawing()
-        {
-            // cari divisi_id JANFAR
-            $divisi = Divisi::where('divisi', 'SAWING')->first();
-
-            // ambil report sesuai divisi
-            $report = ProductionReport::where('divisi_id', $divisi->id)->get();
-
-            return view('adminppic.divisi.sawing', compact('report'));
-        }
-
-        public function lihatsemuadatasawing(Request $request)
+    public function sawing(Request $request)
     {
-        $tanggal_awal = $request->input('tanggal_report');  // misal 2025-08-01
-        $tanggal_akhir = $request->input('tanggal_report_akhir'); // misal 2025-09-10
+        $divisi = Divisi::where('divisi', 'SAWING')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
+
+        return view('adminppic.divisi.sawing', compact('report'));
+    }
+
+
+    public function lihatsemuadatasawing(Request $request)
+    {
+        $tanggal_awal = $request->input('tanggal_report');
+        $tanggal_akhir = $request->input('tanggal_report_akhir');
 
         $divisi = Divisi::where('divisi', 'SAWING')->first();
 
-        $report = ProductionReport::where('divisi_id', $divisi->id)
-            ->when($tanggal_awal && $tanggal_akhir, function ($q) use ($tanggal_awal, $tanggal_akhir) {
-                $q->whereBetween('created_at', [
-                    Carbon::parse($tanggal_awal)->startOfDay(),
-                    Carbon::parse($tanggal_akhir)->endOfDay()
-                ]);
-            })
-            ->get();
+        // query awal
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        // filter tanggal
+        $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.sawing', compact('report', 'tanggal_awal', 'tanggal_akhir'));
     }
+
 
     public function exportSawing(Request $request)
     {
@@ -322,35 +343,49 @@ class AdminPPICController extends Controller
 
 
 
-    public function cutting()
+    public function cutting(Request $request)
     {
-        // cari divisi_id JANFAR
+        // cari divisi_id CUTTING
         $divisi = Divisi::where('divisi', 'CUTTING')->first();
 
-        // ambil report sesuai divisi
-        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
+        // query awal
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.cutting', compact('report'));
     }
 
+
     public function lihatsemuadatacutting(Request $request)
     {
-        $tanggal_awal = $request->input('tanggal_report');  // misal 2025-08-01
-        $tanggal_akhir = $request->input('tanggal_report_akhir'); // misal 2025-09-10
+        $tanggal_awal = $request->input('tanggal_report');
+        $tanggal_akhir = $request->input('tanggal_report_akhir');
 
         $divisi = Divisi::where('divisi', 'CUTTING')->first();
 
-        $report = ProductionReport::where('divisi_id', $divisi->id)
-            ->when($tanggal_awal && $tanggal_akhir, function ($q) use ($tanggal_awal, $tanggal_akhir) {
-                $q->whereBetween('created_at', [
-                    Carbon::parse($tanggal_awal)->startOfDay(),
-                    Carbon::parse($tanggal_akhir)->endOfDay()
-                ]);
-            })
-            ->get();
+        // query awal
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        // filter tanggal
+        $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.cutting', compact('report', 'tanggal_awal', 'tanggal_akhir'));
     }
+
 
     public function exportCutting(Request $request)
     {
@@ -375,35 +410,48 @@ class AdminPPICController extends Controller
             ->header('Pragma', 'no-cache');
     }
 
-    public function bending()
+    public function bending(Request $request)
     {
-        // cari divisi_id JANFAR
+        // cari divisi_id BENDING
         $divisi = Divisi::where('divisi', 'BENDING')->first();
 
-        // ambil report sesuai divisi
-        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
+        // query awal
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.bending', compact('report'));
     }
 
+
     public function lihatsemuadatabending(Request $request)
     {
-        $tanggal_awal = $request->input('tanggal_report');  // misal 2025-08-01
-        $tanggal_akhir = $request->input('tanggal_report_akhir'); // misal 2025-09-10
+        $tanggal_awal = $request->input('tanggal_report');
+        $tanggal_akhir = $request->input('tanggal_report_akhir');
 
         $divisi = Divisi::where('divisi', 'BENDING')->first();
 
-        $report = ProductionReport::where('divisi_id', $divisi->id)
-            ->when($tanggal_awal && $tanggal_akhir, function ($q) use ($tanggal_awal, $tanggal_akhir) {
-                $q->whereBetween('created_at', [
-                    Carbon::parse($tanggal_awal)->startOfDay(),
-                    Carbon::parse($tanggal_akhir)->endOfDay()
-                ]);
-            })
-            ->get();
+        // query awal
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        // filter tanggal
+        $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.bending', compact('report', 'tanggal_awal', 'tanggal_akhir'));
     }
+
 
 
     public function exportBending(Request $request)
@@ -430,35 +478,49 @@ class AdminPPICController extends Controller
     }
 
 
-    public function press()
+    public function press(Request $request)
     {
-        // cari divisi_id JANFAR
+        // cari divisi_id PRESS
         $divisi = Divisi::where('divisi', 'PRESS')->first();
 
-        // ambil report sesuai divisi
-        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
+        // query awal
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.press', compact('report'));
     }
 
+
     public function lihatsemuadatapress(Request $request)
     {
-        $tanggal_awal = $request->input('tanggal_report');  // misal 2025-08-01
-        $tanggal_akhir = $request->input('tanggal_report_akhir'); // misal 2025-09-10
+        $tanggal_awal = $request->input('tanggal_report');
+        $tanggal_akhir = $request->input('tanggal_report_akhir');
 
         $divisi = Divisi::where('divisi', 'PRESS')->first();
 
-        $report = ProductionReport::where('divisi_id', $divisi->id)
-            ->when($tanggal_awal && $tanggal_akhir, function ($q) use ($tanggal_awal, $tanggal_akhir) {
-                $q->whereBetween('created_at', [
-                    Carbon::parse($tanggal_awal)->startOfDay(),
-                    Carbon::parse($tanggal_akhir)->endOfDay()
-                ]);
-            })
-            ->get();
+        // query awal
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        // filter tanggal
+        $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.press', compact('report', 'tanggal_awal', 'tanggal_akhir'));
     }
+
 
     public function exportPress(Request $request)
     {
@@ -484,36 +546,49 @@ class AdminPPICController extends Controller
     }
 
 
-    public function racking()
+    public function racking(Request $request)
     {
-        // cari divisi_id JANFAR
+        // cari divisi_id RACKING
         $divisi = Divisi::where('divisi', 'RACKING')->first();
 
-        // ambil report sesuai divisi
-        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
+        // query awal
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.racking', compact('report'));
     }
 
+
     public function lihatsemuadataracking(Request $request)
     {
-        // Ambil tanggal dari request
-        $tanggal_awal = $request->input('tanggal_report');  // misal 2025-08-01
-        $tanggal_akhir = $request->input('tanggal_report_akhir'); // misal 2025-09-10
+        $tanggal_awal = $request->input('tanggal_report');
+        $tanggal_akhir = $request->input('tanggal_report_akhir');
 
         $divisi = Divisi::where('divisi', 'RACKING')->first();
 
-        $report = ProductionReport::where('divisi_id', $divisi->id)
-            ->when($tanggal_awal && $tanggal_akhir, function ($q) use ($tanggal_awal, $tanggal_akhir) {
-                $q->whereBetween('created_at', [
-                    Carbon::parse($tanggal_awal)->startOfDay(),
-                    Carbon::parse($tanggal_akhir)->endOfDay()
-                ]);
-            })
-            ->get();
+        // query awal
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        // filter tanggal
+        $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.racking', compact('report', 'tanggal_awal', 'tanggal_akhir'));
     }
+
 
 
     public function exportRacking(Request $request)
@@ -540,36 +615,47 @@ class AdminPPICController extends Controller
     }
 
 
-    public function rollforming()
+    public function rollforming(Request $request)
     {
-        // cari divisi_id JANFAR
+        // cari divisi_id ROLL FORMING
         $divisi = Divisi::where('divisi', 'ROLL FORMING')->first();
 
-        // ambil report sesuai divisi
-        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.rollforming', compact('report'));
     }
 
+
     public function lihatsemuadatarollforming(Request $request)
     {
-        // Ambil tanggal dari request
-        $tanggal_awal = $request->input('tanggal_report');  // misal 2025-08-01
-        $tanggal_akhir = $request->input('tanggal_report_akhir'); // misal 2025-09-10
+        $tanggal_awal = $request->input('tanggal_report');
+        $tanggal_akhir = $request->input('tanggal_report_akhir');
 
         $divisi = Divisi::where('divisi', 'ROLL FORMING')->first();
 
-        $report = ProductionReport::where('divisi_id', $divisi->id)
-            ->when($tanggal_awal && $tanggal_akhir, function ($q) use ($tanggal_awal, $tanggal_akhir) {
-                $q->whereBetween('created_at', [
-                    Carbon::parse($tanggal_awal)->startOfDay(),
-                    Carbon::parse($tanggal_akhir)->endOfDay()
-                ]);
-            })
-            ->get();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        // filter tanggal
+        $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.rollforming', compact('report', 'tanggal_awal', 'tanggal_akhir'));
     }
+
 
 
     public function exportrollForming(Request $request)
@@ -596,13 +682,18 @@ class AdminPPICController extends Controller
     }
 
 
-    public function spotwelding()
+    public function spotwelding(Request $request)
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'SPOT WELDING')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
 
-        // ambil report sesuai divisi
-        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.spotwelding', compact('report'));
     }
@@ -614,15 +705,16 @@ class AdminPPICController extends Controller
         $tanggal_akhir = $request->input('tanggal_report_akhir'); // misal 2025-09-10
 
         $divisi = Divisi::where('divisi', 'SPOT WELDING')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
 
-        $report = ProductionReport::where('divisi_id', $divisi->id)
-            ->when($tanggal_awal && $tanggal_akhir, function ($q) use ($tanggal_awal, $tanggal_akhir) {
-                $q->whereBetween('created_at', [
-                    Carbon::parse($tanggal_awal)->startOfDay(),
-                    Carbon::parse($tanggal_akhir)->endOfDay()
-                ]);
-            })
-            ->get();
+        // filter tanggal
+        $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.spotwelding', compact('report', 'tanggal_awal', 'tanggal_akhir'));
     }
@@ -652,14 +744,18 @@ class AdminPPICController extends Controller
     }
 
 
-    public function weldingaccesoris()
+    public function weldingaccesoris(Request $request)
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'WELDING ACCESORIS')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
 
-        // ambil report sesuai divisi
-        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
 
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
         return view('adminppic.divisi.weldingaccesoris', compact('report'));
     }
 
@@ -670,16 +766,16 @@ class AdminPPICController extends Controller
         $tanggal_akhir = $request->input('tanggal_report_akhir'); // misal 2025-09-10
 
         $divisi = Divisi::where('divisi', 'WELDING ACCESORIS')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
 
-        $report = ProductionReport::where('divisi_id', $divisi->id)
-            ->when($tanggal_awal && $tanggal_akhir, function ($q) use ($tanggal_awal, $tanggal_akhir) {
-                $q->whereBetween('created_at', [
-                    Carbon::parse($tanggal_awal)->startOfDay(),
-                    Carbon::parse($tanggal_akhir)->endOfDay()
-                ]);
-            })
-            ->get();
+        // filter tanggal
+        $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
 
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        $report = $query->paginate(10)->appends($request->all());
         return view('adminppic.divisi.weldingaccesoris', compact('report', 'tanggal_awal', 'tanggal_akhir'));
     }
 
@@ -708,13 +804,18 @@ class AdminPPICController extends Controller
 
 
 
-    public function weldingshofiting1()
+    public function weldingshofiting1(Request $request)
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'WELDING SHOFITING 1')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
 
-        // ambil report sesuai divisi
-        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.weldingshofting1', compact('report'));
     }
@@ -725,16 +826,17 @@ class AdminPPICController extends Controller
         $tanggal_awal = $request->input('tanggal_report');  // misal 2025-08-01
         $tanggal_akhir = $request->input('tanggal_report_akhir'); // misal 2025-09-10
 
-        $divisi = Divisi::where('divisi', 'WELDING SHOFITING 1')->first();
+        $divisi = Divisi::where('divisi', 'JANFAR')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
 
-        $report = ProductionReport::where('divisi_id', $divisi->id)
-            ->when($tanggal_awal && $tanggal_akhir, function ($q) use ($tanggal_awal, $tanggal_akhir) {
-                $q->whereBetween('created_at', [
-                    Carbon::parse($tanggal_awal)->startOfDay(),
-                    Carbon::parse($tanggal_akhir)->endOfDay()
-                ]);
-            })
-            ->get();
+        // filter tanggal
+        $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.weldingshofting1', compact('report', 'tanggal_awal', 'tanggal_akhir'));
     }
@@ -764,13 +866,18 @@ class AdminPPICController extends Controller
     }
 
 
-    public function weldingshofiting2()
+    public function weldingshofiting2(Request $request)
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'WELDING SHOFITING 2')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
 
-        // ambil report sesuai divisi
-        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.weldingshofting2', compact('report'));
     }
@@ -782,15 +889,16 @@ class AdminPPICController extends Controller
         $tanggal_akhir = $request->input('tanggal_report_akhir'); // misal 2025-09-10
 
         $divisi = Divisi::where('divisi', 'WELDING SHOFITING 2')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
 
-        $report = ProductionReport::where('divisi_id', $divisi->id)
-            ->when($tanggal_awal && $tanggal_akhir, function ($q) use ($tanggal_awal, $tanggal_akhir) {
-                $q->whereBetween('created_at', [
-                    Carbon::parse($tanggal_awal)->startOfDay(),
-                    Carbon::parse($tanggal_akhir)->endOfDay()
-                ]);
-            })
-            ->get();
+        // filter tanggal
+        $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.weldingshofting2', compact('report', 'tanggal_awal', 'tanggal_akhir'));
     }
@@ -819,13 +927,18 @@ class AdminPPICController extends Controller
     }
 
 
-    public function weldingdoor()
+    public function weldingdoor(Request $request)
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'WELDING DOOR')->first();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
 
-        // ambil report sesuai divisi
-        $report = ProductionReport::where('divisi_id', $divisi->id)->get();
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        // ambil data dengan pagination
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.weldingdoor', compact('report'));
     }
@@ -838,14 +951,16 @@ class AdminPPICController extends Controller
 
         $divisi = Divisi::where('divisi', 'WELDING DOOR')->first();
 
-        $report = ProductionReport::where('divisi_id', $divisi->id)
-            ->when($tanggal_awal && $tanggal_akhir, function ($q) use ($tanggal_awal, $tanggal_akhir) {
-                $q->whereBetween('created_at', [
-                    Carbon::parse($tanggal_awal)->startOfDay(),
-                    Carbon::parse($tanggal_akhir)->endOfDay()
-                ]);
-            })
-            ->get();
+        $query = ProductionReport::where('divisi_id', $divisi->id);
+
+        // filter tanggal
+        $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
+
+        // search filter
+        $columns = Schema::getColumnListing('production_reports');
+        $this->filterBySearch($query, $request->search, $columns);
+
+        $report = $query->paginate(10)->appends($request->all());
 
         return view('adminppic.divisi.weldingdoor', compact('report', 'tanggal_awal', 'tanggal_akhir'));
     }
