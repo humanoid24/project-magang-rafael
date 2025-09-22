@@ -111,7 +111,6 @@
 
                         <th>Catatan</th>
                         <th>Aksi</th>
-                        <th>TGL Dibuat</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -167,7 +166,6 @@
                                     </form>
                                 @endif
                             </td>
-                            <td>{{ $item->created_at }}</td>
 
                         </tr>
                     @endforeach
