@@ -260,7 +260,7 @@ class AdminPPICController extends Controller
         $query = ProductionReport::where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('mulai_kerja', [
                 $request->tanggal_awal . " 00:00:00",
                 $request->tanggal_akhir . " 23:59:59"
             ]);
@@ -326,7 +326,7 @@ class AdminPPICController extends Controller
         $query = ProductionReport::where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('mulai_kerja', [
                 $request->tanggal_awal . " 00:00:00",
                 $request->tanggal_akhir . " 23:59:59"
             ]);
@@ -395,7 +395,7 @@ class AdminPPICController extends Controller
         $query = ProductionReport::where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('mulai_kerja', [
                 $request->tanggal_awal . " 00:00:00",
                 $request->tanggal_akhir . " 23:59:59"
             ]);
@@ -462,7 +462,7 @@ class AdminPPICController extends Controller
         $query = ProductionReport::where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('mulai_kerja', [
                 $request->tanggal_awal . " 00:00:00",
                 $request->tanggal_akhir . " 23:59:59"
             ]);
@@ -530,7 +530,7 @@ class AdminPPICController extends Controller
         $query = ProductionReport::where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('mulai_kerja', [
                 $request->tanggal_awal . " 00:00:00",
                 $request->tanggal_akhir . " 23:59:59"
             ]);
@@ -599,7 +599,7 @@ class AdminPPICController extends Controller
         $query = ProductionReport::where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('mulai_kerja', [
                 $request->tanggal_awal . " 00:00:00",
                 $request->tanggal_akhir . " 23:59:59"
             ]);
@@ -666,7 +666,7 @@ class AdminPPICController extends Controller
         $query = ProductionReport::where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('mulai_kerja', [
                 $request->tanggal_awal . " 00:00:00",
                 $request->tanggal_akhir . " 23:59:59"
             ]);
@@ -728,7 +728,7 @@ class AdminPPICController extends Controller
         $query = ProductionReport::where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('mulai_kerja', [
                 $request->tanggal_awal . " 00:00:00",
                 $request->tanggal_akhir . " 23:59:59"
             ]);
@@ -787,7 +787,7 @@ class AdminPPICController extends Controller
         $query = ProductionReport::where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('mulai_kerja', [
                 $request->tanggal_awal . " 00:00:00",
                 $request->tanggal_akhir . " 23:59:59"
             ]);
@@ -850,7 +850,7 @@ class AdminPPICController extends Controller
         $query = ProductionReport::where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('mulai_kerja', [
                 $request->tanggal_awal . " 00:00:00",
                 $request->tanggal_akhir . " 23:59:59"
             ]);
@@ -911,7 +911,7 @@ class AdminPPICController extends Controller
         $query = ProductionReport::where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('mulai_kerja', [
                 $request->tanggal_awal . " 00:00:00",
                 $request->tanggal_akhir . " 23:59:59"
             ]);
@@ -973,7 +973,7 @@ class AdminPPICController extends Controller
         $query = ProductionReport::where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
-            $query->whereBetween('created_at', [
+            $query->whereBetween('mulai_kerja', [
                 $request->tanggal_awal . " 00:00:00",
                 $request->tanggal_akhir . " 23:59:59"
             ]);

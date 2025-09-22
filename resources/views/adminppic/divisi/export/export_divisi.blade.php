@@ -39,7 +39,6 @@
                         'selesai_kerja'=> $item->selesai_kerja,
                         'bagian'       => $item->bagian,
                         'sub_bagian'   => $item->sub_bagian,
-                        'actual'       => $item->actual,
                     ];
 
                     // cek kelengkapan semua field
