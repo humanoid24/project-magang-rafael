@@ -21,7 +21,7 @@
                 <th>Mulai Kerja</th>
                 <th>Selesai Kerja</th>
                 <th>Lama Kerja</th>
-                <th>Divisi</th>
+                <th>Workcenter</th>
                 <th>Mesin</th>
                 <th>Actual</th>
                 <th>Catatan</th>
