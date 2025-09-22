@@ -254,7 +254,7 @@ class AdminPPICController extends Controller
 
     public function exportJanfar(Request $request)
     {
-        $title = "Laporan Produksi Divisi Janfar";
+        $title = "Laporan Produksi Workcenter Janfar";
 
         $divisi = Divisi::where('divisi', 'JANFAR')->first();
         $query = ProductionReport::where('divisi_id', $divisi->id);
@@ -320,7 +320,7 @@ class AdminPPICController extends Controller
 
     public function exportSawing(Request $request)
     {
-        $title = "Laporan Produksi Divisi Sawing";
+        $title = "Laporan Produksi Workcenter Sawing";
 
         $divisi = Divisi::where('divisi', 'SAWING')->first();
         $query = ProductionReport::where('divisi_id', $divisi->id);
@@ -389,7 +389,7 @@ class AdminPPICController extends Controller
 
     public function exportCutting(Request $request)
     {
-        $title = "Laporan Produksi Divisi Cutting";
+        $title = "Laporan Produksi Workcenter Cutting";
 
         $divisi = Divisi::where('divisi', 'CUTTING')->first();
         $query = ProductionReport::where('divisi_id', $divisi->id);
@@ -456,7 +456,7 @@ class AdminPPICController extends Controller
 
     public function exportBending(Request $request)
     {
-        $title = "Laporan Produksi Divisi Bending";
+        $title = "Laporan Produksi Workcenter Bending";
 
         $divisi = Divisi::where('divisi', 'BENDING')->first();
         $query = ProductionReport::where('divisi_id', $divisi->id);
@@ -524,7 +524,7 @@ class AdminPPICController extends Controller
 
     public function exportPress(Request $request)
     {
-        $title = "Laporan Produksi Divisi Press";
+        $title = "Laporan Produksi Workcenter Press";
 
         $divisi = Divisi::where('divisi', 'PRESS')->first();
         $query = ProductionReport::where('divisi_id', $divisi->id);
@@ -593,7 +593,7 @@ class AdminPPICController extends Controller
 
     public function exportRacking(Request $request)
     {
-        $title = "Laporan Produksi Divisi Racking";
+        $title = "Laporan Produksi Workcenter Racking";
 
         $divisi = Divisi::where('divisi', 'RACKING')->first();
         $query = ProductionReport::where('divisi_id', $divisi->id);
@@ -660,7 +660,7 @@ class AdminPPICController extends Controller
 
     public function exportrollForming(Request $request)
     {
-        $title = "Laporan Produksi Divisi Roll Forming";
+        $title = "Laporan Produksi Workcenter Roll Forming";
 
         $divisi = Divisi::where('divisi', 'ROLL FORMING')->first();
         $query = ProductionReport::where('divisi_id', $divisi->id);
@@ -722,7 +722,7 @@ class AdminPPICController extends Controller
 
     public function exportSpotWelding(Request $request)
     {
-        $title = "Laporan Produksi Divisi Spot Welding";
+        $title = "Laporan Produksi Workcenter Spot Welding";
 
         $divisi = Divisi::where('divisi', 'SPOT WELDING')->first();
         $query = ProductionReport::where('divisi_id', $divisi->id);
@@ -781,7 +781,7 @@ class AdminPPICController extends Controller
 
     public function exportWeldingAccesoris(Request $request)
     {
-        $title = "Laporan Produksi Divisi Welding Accesoris";
+        $title = "Laporan Produksi Workcenter Welding Accesoris";
 
         $divisi = Divisi::where('divisi', 'WELDING ACCESORIS')->first();
         $query = ProductionReport::where('divisi_id', $divisi->id);
@@ -844,7 +844,7 @@ class AdminPPICController extends Controller
 
     public function exportWeldingShofiting1(Request $request)
     {
-        $title = "Laporan Produksi Divisi Welding Shofiting 1";
+        $title = "Laporan Produksi Workcenter Welding Shofiting 1";
 
         $divisi = Divisi::where('divisi', 'WELDING SHOFITING 1')->first();
         $query = ProductionReport::where('divisi_id', $divisi->id);
@@ -905,7 +905,7 @@ class AdminPPICController extends Controller
 
     public function exportWeldingShofiting2(Request $request)
     {
-        $title = "Laporan Produksi Divisi Welding Shofiting 2";
+        $title = "Laporan Produksi Workcenter Welding Shofiting 2";
 
         $divisi = Divisi::where('divisi', 'WELDING SHOFITING 2')->first();
         $query = ProductionReport::where('divisi_id', $divisi->id);
@@ -967,7 +967,7 @@ class AdminPPICController extends Controller
 
     public function exportWeldingDoor(Request $request)
     {
-        $title = "Laporan Produksi Divisi Welding Door";
+        $title = "Laporan Produksi Workcenter Welding Door";
 
         $divisi = Divisi::where('divisi', 'WELDING DOOR')->first();
         $query = ProductionReport::where('divisi_id', $divisi->id);
