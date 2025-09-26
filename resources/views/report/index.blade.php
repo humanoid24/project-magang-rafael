@@ -55,11 +55,30 @@
                 </thead>
                 <tbody>
                     @foreach($report as $pekerja)
+                        @php
+                            $wajib = [
+                                'user_id' => $pekerja->user_id,
+                                'shift' => $pekerja->shift,
+                                'mulai_kerja' => $pekerja->mulai_kerja,
+                                'selesai_kerja' => $pekerja->selesai_kerja,
+                                'bagian' => $pekerja->bagian,
+                                'sub_bagian' => $pekerja->sub_bagian,
+                            ];
+                            $lengkap = collect($wajib)->every(fn($val) => !empty($val));
+                        @endphp
+
+                        {{-- Kalau admin, skip data yang belum lengkap --}}
+                        @if(isAdmin() && !$lengkap)
+                            @continue
+                        @endif
+
                         <tr>
                             <td>{{ ($report->currentPage() - 1) * $report->perPage() + $loop->iteration }}</td>
+
                             @if(isAdmin())
-                            <th>{{ optional($pekerja->user)->name }}</th>
+                                <td>{{ optional($pekerja->user)->name }}</td>
                             @endif
+
                             <td>{{ $pekerja->so_no }}</td>
                             <td>{{ $pekerja->customer }}</td>
                             <td>{{ $pekerja->pdo_crd }}</td>
@@ -75,32 +94,28 @@
                                 @if ($pekerja->mulai_kerja && $pekerja->selesai_kerja)
                                     {{ \Carbon\Carbon::parse($pekerja->mulai_kerja)->diffInMinutes(\Carbon\Carbon::parse($pekerja->selesai_kerja)) }} menit
                                 @else
-                                    
+                                    -
                                 @endif
                             </td>
 
                             <td>{{ $pekerja->bagian }}</td>
                             <td>{{ $pekerja->sub_bagian }}</td>
-                            
                             <td>{{ $pekerja->actual }}</td>
-
                             <td>{{ $pekerja->catatan }}</td>
+
                             <td>
-                                @if (isPekerja())
-                                <a href="{{ route('dashboard.edit', $pekerja->id) }}" class="btn btn-sm btn-warning">Tambah Laporan / Edit Laporan</a>       
-                                @endif
-                                
-                                @if(isAdmin())
-                                    <form action="{{ route('dashboard.destroy', $pekerja->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button onclick="return confirm('Yakin?')" class="btn btn-sm btn-danger">Hapus</button>
-                                    </form>
-                                @endif
+                                <form action="{{ route('dashboard.destroy', $pekerja->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button onclick="return confirm('Yakin?')" class="btn btn-sm btn-danger">
+                                        Hapus
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
+
             </table>
             <div class="d-flex justify-content-end mt-3">
                 {{ $report->links('pagination::bootstrap-4') }}

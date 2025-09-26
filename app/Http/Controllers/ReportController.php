@@ -22,6 +22,13 @@ class ReportController extends Controller
         $query = ProductionReport::query();
 
         if ($user->role === 1) {
+            $query->whereNotNull('user_id')
+                ->whereNotNull('shift')
+                ->whereNotNull('mulai_kerja')
+                ->whereNotNull('selesai_kerja')
+                ->whereNotNull('bagian')
+                ->whereNotNull('sub_bagian');
+
             // Search filter (semua kolom)
             if ($request->filled('search')) {
                 $search = $request->search;
@@ -33,6 +40,7 @@ class ReportController extends Controller
                     }
                 });
             }
+            
 
             $report = $query->paginate(10)->appends($request->all());
             return view('report.index', compact('report'));
