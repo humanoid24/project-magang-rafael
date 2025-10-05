@@ -217,7 +217,7 @@ class AdminPPICController extends Controller
     public function janfar(Request $request)
     {
         $divisi = Divisi::where('divisi', 'JANFAR')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // search filter
         $columns = Schema::getColumnListing('production_reports');
@@ -237,7 +237,7 @@ class AdminPPICController extends Controller
         $tanggal_akhir = $request->input('tanggal_report_akhir');
 
         $divisi = Divisi::where('divisi', 'JANFAR')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // filter tanggal
         $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
@@ -257,7 +257,7 @@ class AdminPPICController extends Controller
         $title = "Laporan Produksi Workcenter Janfar";
 
         $divisi = Divisi::where('divisi', 'JANFAR')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
             $query->whereBetween('mulai_kerja', [
@@ -280,7 +280,7 @@ class AdminPPICController extends Controller
     public function sawing(Request $request)
     {
         $divisi = Divisi::where('divisi', 'SAWING')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // search filter
         $columns = Schema::getColumnListing('production_reports');
@@ -301,7 +301,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'SAWING')->first();
 
         // query awal
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // filter tanggal
         $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
@@ -323,7 +323,7 @@ class AdminPPICController extends Controller
         $title = "Laporan Produksi Workcenter Sawing";
 
         $divisi = Divisi::where('divisi', 'SAWING')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
             $query->whereBetween('mulai_kerja', [
@@ -349,7 +349,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'CUTTING')->first();
 
         // query awal
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // search filter
         $columns = Schema::getColumnListing('production_reports');
@@ -370,7 +370,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'CUTTING')->first();
 
         // query awal
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // filter tanggal
         $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
@@ -392,7 +392,7 @@ class AdminPPICController extends Controller
         $title = "Laporan Produksi Workcenter Cutting";
 
         $divisi = Divisi::where('divisi', 'CUTTING')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
             $query->whereBetween('mulai_kerja', [
@@ -403,7 +403,7 @@ class AdminPPICController extends Controller
 
         $report = $query->get(); // ambil data di akhir
 
-        return response()->view('adminppic.divisi.export.export_divisi', compact('report', 'title'))
+        return response()->view('adminppic.divisi.export.export_divisi_cutting', compact('report', 'title'))
             ->header('Content-Type', 'application/vnd.ms-excel')
             ->header('Content-Disposition', "attachment; filename=laporan_cutting.xls")
             ->header('Cache-Control', 'no-cache, must-revalidate')
@@ -416,7 +416,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'BENDING')->first();
 
         // query awal
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // search filter
         $columns = Schema::getColumnListing('production_reports');
@@ -437,7 +437,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'BENDING')->first();
 
         // query awal
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // filter tanggal
         $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
@@ -459,7 +459,7 @@ class AdminPPICController extends Controller
         $title = "Laporan Produksi Workcenter Bending";
 
         $divisi = Divisi::where('divisi', 'BENDING')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
             $query->whereBetween('mulai_kerja', [
@@ -484,7 +484,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'PRESS')->first();
 
         // query awal
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // search filter
         $columns = Schema::getColumnListing('production_reports');
@@ -505,7 +505,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'PRESS')->first();
 
         // query awal
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // filter tanggal
         $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
@@ -527,7 +527,7 @@ class AdminPPICController extends Controller
         $title = "Laporan Produksi Workcenter Press";
 
         $divisi = Divisi::where('divisi', 'PRESS')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
             $query->whereBetween('mulai_kerja', [
@@ -552,7 +552,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'RACKING')->first();
 
         // query awal
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // search filter
         $columns = Schema::getColumnListing('production_reports');
@@ -574,7 +574,7 @@ class AdminPPICController extends Controller
         $divisi = Divisi::where('divisi', 'RACKING')->first();
 
         // query awal
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // filter tanggal
         $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
@@ -596,7 +596,7 @@ class AdminPPICController extends Controller
         $title = "Laporan Produksi Workcenter Racking";
 
         $divisi = Divisi::where('divisi', 'RACKING')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
             $query->whereBetween('mulai_kerja', [
@@ -620,7 +620,7 @@ class AdminPPICController extends Controller
         // cari divisi_id ROLL FORMING
         $divisi = Divisi::where('divisi', 'ROLL FORMING')->first();
 
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // search filter
         $columns = Schema::getColumnListing('production_reports');
@@ -640,7 +640,7 @@ class AdminPPICController extends Controller
 
         $divisi = Divisi::where('divisi', 'ROLL FORMING')->first();
 
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // filter tanggal
         $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
@@ -663,7 +663,7 @@ class AdminPPICController extends Controller
         $title = "Laporan Produksi Workcenter Roll Forming";
 
         $divisi = Divisi::where('divisi', 'ROLL FORMING')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
             $query->whereBetween('mulai_kerja', [
@@ -686,7 +686,7 @@ class AdminPPICController extends Controller
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'SPOT WELDING')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // search filter
         $columns = Schema::getColumnListing('production_reports');
@@ -705,7 +705,7 @@ class AdminPPICController extends Controller
         $tanggal_akhir = $request->input('tanggal_report_akhir'); // misal 2025-09-10
 
         $divisi = Divisi::where('divisi', 'SPOT WELDING')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // filter tanggal
         $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
@@ -725,7 +725,7 @@ class AdminPPICController extends Controller
         $title = "Laporan Produksi Workcenter Spot Welding";
 
         $divisi = Divisi::where('divisi', 'SPOT WELDING')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
             $query->whereBetween('mulai_kerja', [
@@ -748,7 +748,7 @@ class AdminPPICController extends Controller
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'WELDING ACCESORIS')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // search filter
         $columns = Schema::getColumnListing('production_reports');
@@ -766,7 +766,7 @@ class AdminPPICController extends Controller
         $tanggal_akhir = $request->input('tanggal_report_akhir'); // misal 2025-09-10
 
         $divisi = Divisi::where('divisi', 'WELDING ACCESORIS')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // filter tanggal
         $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
@@ -784,7 +784,7 @@ class AdminPPICController extends Controller
         $title = "Laporan Produksi Workcenter Welding Accesoris";
 
         $divisi = Divisi::where('divisi', 'WELDING ACCESORIS')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
             $query->whereBetween('mulai_kerja', [
@@ -808,7 +808,7 @@ class AdminPPICController extends Controller
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'WELDING SHOFITING 1')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // search filter
         $columns = Schema::getColumnListing('production_reports');
@@ -827,7 +827,7 @@ class AdminPPICController extends Controller
         $tanggal_akhir = $request->input('tanggal_report_akhir'); // misal 2025-09-10
 
         $divisi = Divisi::where('divisi', 'JANFAR')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // filter tanggal
         $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
@@ -847,7 +847,7 @@ class AdminPPICController extends Controller
         $title = "Laporan Produksi Workcenter Welding Shofiting 1";
 
         $divisi = Divisi::where('divisi', 'WELDING SHOFITING 1')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
             $query->whereBetween('mulai_kerja', [
@@ -870,7 +870,7 @@ class AdminPPICController extends Controller
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'WELDING SHOFITING 2')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // search filter
         $columns = Schema::getColumnListing('production_reports');
@@ -889,7 +889,7 @@ class AdminPPICController extends Controller
         $tanggal_akhir = $request->input('tanggal_report_akhir'); // misal 2025-09-10
 
         $divisi = Divisi::where('divisi', 'WELDING SHOFITING 2')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // filter tanggal
         $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
@@ -908,7 +908,7 @@ class AdminPPICController extends Controller
         $title = "Laporan Produksi Workcenter Welding Shofiting 2";
 
         $divisi = Divisi::where('divisi', 'WELDING SHOFITING 2')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
             $query->whereBetween('mulai_kerja', [
@@ -931,7 +931,7 @@ class AdminPPICController extends Controller
     {
         // cari divisi_id JANFAR
         $divisi = Divisi::where('divisi', 'WELDING DOOR')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // search filter
         $columns = Schema::getColumnListing('production_reports');
@@ -951,7 +951,7 @@ class AdminPPICController extends Controller
 
         $divisi = Divisi::where('divisi', 'WELDING DOOR')->first();
 
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         // filter tanggal
         $this->filterByDate($query, $tanggal_awal, $tanggal_akhir);
@@ -970,7 +970,7 @@ class AdminPPICController extends Controller
         $title = "Laporan Produksi Workcenter Welding Door";
 
         $divisi = Divisi::where('divisi', 'WELDING DOOR')->first();
-        $query = ProductionReport::where('divisi_id', $divisi->id);
+        $query = ProductionReport::with('user')->where('divisi_id', $divisi->id);
 
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
             $query->whereBetween('mulai_kerja', [

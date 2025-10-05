@@ -35,19 +35,27 @@
                         <th>SO NO</th>
                         <th>Customer</th>
                         <th>PDO CRD</th>
+                        <th>Item Code</th>
                         <th>Item Name</th>
                         <th>QTY</th>
-                        <th>WEIGHT/PCS</th>
+                        <th>Tebal</th>
+                        <th>Panjang</th>
+                        <th>Lebar</th>
+
+                        <th>Item/Weight</th>
+                        <th>Jumlah Stroke</th>
+                        <th>Actual Hasil</th>
                         <th>WEIGHT TOTAL</th>
 
-                        <th>Shift</th>
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
-                        <th>Lama Kerja</th>
+                        <th>Hasil Kerja</th>
+                        <th>Performa</th>
+                        <th>Group</th>
+                        <th>Shift</th>
                         <th>Workcenter</th>
                         <th>Mesin</th>
 
-                        <th>Actual</th>
 
                         <th>Catatan</th>
                         <th>Aksi</th>
@@ -82,12 +90,16 @@
                             <td>{{ $pekerja->so_no }}</td>
                             <td>{{ $pekerja->customer }}</td>
                             <td>{{ $pekerja->pdo_crd }}</td>
+                            <td>{{ $pekerja->item_code }}</td>
                             <td>{{ $pekerja->item_name }}</td>
                             <td>{{ $pekerja->qty }}</td>
-                            <td>{{ rtrim(rtrim($pekerja->weight_pcs, '0'), '.') }}</td>
+                            <td>{{ $pekerja->tebal }}</td>
+                            <td>{{ $pekerja->panjang }}</td>
+                            <td>{{ $pekerja->lebar }}</td>
+                            <td>{{ $pekerja->item_weight }}</td>
+                            <td>{{ $pekerja->jumlah_stroke }}</td>
+                            <td>{{ $pekerja->actual_hasil }}</td>
                             <td>{{ $pekerja->weight_total }}</td>
-
-                            <td>{{ $pekerja->shift }}</td>
                             <td>{{ $pekerja->mulai_kerja }}</td>
                             <td>{{ $pekerja->selesai_kerja }}</td>
                             <td>
@@ -97,10 +109,11 @@
                                     -
                                 @endif
                             </td>
-
+                            <td>{{ $pekerja->performa }}</td>
+                            <td>{{ $pekerja->group }}</td>
+                            <td>{{ $pekerja->shift }}</td>
                             <td>{{ $pekerja->bagian }}</td>
                             <td>{{ $pekerja->sub_bagian }}</td>
-                            <td>{{ $pekerja->actual }}</td>
                             <td>{{ $pekerja->catatan }}</td>
 
                             <td>

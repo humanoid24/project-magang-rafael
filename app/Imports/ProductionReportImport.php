@@ -5,8 +5,11 @@ namespace App\Imports;
 use App\Models\ProductionReport;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 
-class ProductionReportImport implements ToCollection
+class ProductionReportImport implements ToCollection, WithCalculatedFormulas
 {
     protected $divisiId;
 
@@ -20,22 +23,42 @@ class ProductionReportImport implements ToCollection
         $headers = [];
         $dataStart = false;
 
-        foreach ($rows as $row) {
+        foreach ($rows as $index => $row) {
             $rowArray = $row->toArray();
 
-            // Cari baris header
+            // cari header
             if (!$dataStart && $this->isHeaderRow($rowArray)) {
                 $headers = array_map(function ($h) {
                     return $this->normalizeHeader($h);
                 }, $rowArray);
+                // Log::info('✅ Detected Headers (Row ' . ($index + 1) . '):', $headers);
 
                 $dataStart = true;
                 continue; // lewati baris header
             }
 
             if ($dataStart) {
-                $data = @array_combine($headers, $rowArray);
+                $finalHeaders = [];
+                $seen = [];
+
+                foreach ($headers as $h) {
+                    if (!isset($seen[$h])) {
+                        $seen[$h] = 1;
+                        $finalHeaders[] = $h;
+                    } else {
+                        $seen[$h]++;
+                        $finalHeaders[] = $h . '_' . $seen[$h]; // kasih suffix
+                    }
+                }
+
+                $data = @array_combine($finalHeaders, $rowArray);
+
+                Log::debug('📌 Headers final:', $finalHeaders);
+                Log::debug('📌 Data row:', $data);
+
                 if (!$data) continue;
+
+                // Log::info('📌 Mapped Row (Row ' . ($index + 1) . '):', $data);
 
                 // Skip baris invalid
                 if (
@@ -46,16 +69,27 @@ class ProductionReportImport implements ToCollection
                     continue;
                 }
 
-                ProductionReport::create([
-                    'divisi_id'     => $this->divisiId,
-                    'so_no'         => $this->getValue($data, ['so_no']),
-                    'customer'      => $this->getValue($data, ['customer']),
-                    'pdo_crd'       => $this->getValue($data, ['pdocrd', 'pdo_crd']),
-                    'item_name'     => $this->getValue($data, ['item_name']),
-                    'qty'           => $this->getNumeric($data, ['pdocrd_qty', 'pdo_qty', 'qty']),
-                    'weight_pcs'    => $this->getNumeric($data, ['item_weight', 'weight_per_pcs']),
-                    'weight_total'  => $this->getNumeric($data, ['pdocrd_weight_total', 'total_weight']),
-                ]);
+                try {
+                    $report = ProductionReport::create([
+                        'divisi_id'     => $this->divisiId,
+                        'pdo_due_date'  => $this->getValue($data, ['pdo_due_date', 'pdo due date']) ?? null,
+                        'so_no'         => $this->getValue($data, ['so no', 'so_no']),
+                        'customer'      => $this->getValue($data, ['customer']),
+                        'pdo_crd'       => $this->getValue($data, ['pdo_crd', 'pdocrd']),
+                        'item_code'     => $this->getValue($data, ['item_code']),
+                        'item_name'     => $this->getValue($data, ['item name', 'item_name']),
+                        'qty' => $this->getNumeric($data, ['pdocrd_qty']),
+                        'tebal'         => $this->getNumeric($data, ['tebal']) ?? 0,
+                        'panjang'       => $this->getNumeric($data, ['panjang']) ?? 0,
+                        'lebar'         => $this->getNumeric($data, ['lebar']) ?? 0,
+                        'item_weight'   => $this->getNumeric($data, ['item_weight', 'item weight', 'weight_per_pcs']),
+                    ]);
+                    // Log::debug('📝 Data akan disimpan:', $report->toArray()); // ✅ pindahin ke sini
+                    // ✅ Tambahin log kalau sukses masuk DB
+                    // Log::info('✅ Data berhasil disimpan ke DB (ID: ' . $report->id . ')', $report->toArray());
+                } catch (\Exception $e) {
+
+                }
             }
         }
     }
@@ -67,40 +101,34 @@ class ProductionReportImport implements ToCollection
         $h = str_replace([' ', '-', '__'], '_', $h);
         $h = preg_replace('/_+/', '_', $h);
 
-        // Mapping manual jika header Excel aneh
         $map = [
-            'so no'                 => 'so_no',
-            'sono'                  => 'so_no',
-            'customer_name'         => 'customer',
-            'cust'                  => 'customer',
-            'pdocrd qty'            => 'pdocrd_qty',
-            'pdo_crd qty'           => 'pdocrd_qty',
-            'qty'                   => 'pdocrd_qty',
-            'pdo crd qty'           => 'pdocrd_qty',
-            'pdocrdqty'           => 'pdocrd_qty',
-            'itemweight'            => 'item_weight',
-            'item weight'           => 'item_weight',
-            'item_weight'           => 'item_weight',
-            'weight per pcs'        => 'item_weight',
-            'total_weight'          => 'pdocrd_weight_total',
-            'pdo_crd_weight_total'  => 'pdocrd_weight_total',
-            'pdo crd weight total'  => 'pdocrd_weight_total',
-            'pdocrd_weight_total'  => 'pdocrd_weight_total',
+            'pdo due date' => 'pdo_due_date',
+            'pdo_due_date' => 'pdo_due_date',
+            'item code'    => 'item_code',
+            'item_code'    => 'item_code',
+            'item name'    => 'item name',
+            'tebal'        => 'tebal',
+            'panjang'      => 'panjang',
+            'lebar'        => 'lebar',
+            'item weight'  => 'item_weight',
+            'item_weight'  => 'item_weight',
+            'weight total' => 'pdocrd weight total',
+            'pdo crd weight total' => 'pdocrd weight total',
+            'pdo crd qty'    => 'pdocrd_qty',
+            'pdocrd qty'     => 'pdocrd_qty',
+            'pdo_crd_qty'    => 'pdocrd_qty',
+            'pdo crd quantity' => 'pdocrd_qty',
 
         ];
-
         return $map[$h] ?? $h;
     }
 
     private function isHeaderRow($rowArray)
     {
         $rowLower = array_map(fn($v) => strtolower(trim($v)), $rowArray);
-        return in_array('so no', $rowLower) && in_array('customer', $rowLower);
+        return in_array('so no', $rowLower) || in_array('so_no', $rowLower);
     }
 
-    /**
-     * Ambil value dari beberapa kemungkinan key
-     */
     private function getValue(array $data, array $keys, $default = null)
     {
         foreach ($keys as $key) {
@@ -111,14 +139,14 @@ class ProductionReportImport implements ToCollection
         return $default;
     }
 
-    /**
-     * Ambil angka dari beberapa kemungkinan key, fallback 0
-     */
     private function getNumeric(array $data, array $keys, $default = 0)
     {
         foreach ($keys as $key) {
-            if (isset($data[$key]) && is_numeric($data[$key])) {
-                return $data[$key];
+            if (isset($data[$key]) && $data[$key] !== '') {
+                $val = str_replace(',', '.', $data[$key]); // ubah koma jadi titik
+                if (is_numeric($val)) {
+                    return $val + 0; // jadi float
+                }
             }
         }
         return $default;

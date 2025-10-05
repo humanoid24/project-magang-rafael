@@ -8,16 +8,38 @@ use Illuminate\Database\Eloquent\Model;
 class ProductionReport extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id','shift', 'mulai_kerja', 'selesai_kerja', 'bagian', 'sub_bagian', 'catatan',
+    protected $fillable = [
+        'user_id',
+        'divisi_id',
+        'pdo_due_date',
         'so_no',
         'customer',
         'pdo_crd',
+        'item_code',
         'item_name',
         'qty',
-        'weight_pcs',
+        'tebal',
+        'panjang',
+        'lebar',
+        'item_weight',
+        'jumlah_stroke',
+        'actual_hasil',
         'weight_total',
-        'actual',
-        'divisi_id',];
+        'start_tidak',
+        'selesai_tidak',
+        'total_tidak',
+        'mulai_kerja',
+        'selesai_kerja',
+        'hasil_jam_kerja',
+        'performa',
+        'group',
+        'shift',
+        'bagian',
+        'sub_bagian',
+        'catatan',
+ ];
+
+
 
     public function user()
     {

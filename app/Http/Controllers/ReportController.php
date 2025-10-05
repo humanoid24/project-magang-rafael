@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Divisi;
 use App\Models\ProductionReport;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -122,24 +123,45 @@ class ReportController extends Controller
     public function update(Request $request, string $id)
     {
         $validatedData = $request->validate([
-            'shift' => 'required|integer',
-            'mulai_kerja' => 'required|date',
-            'selesai_kerja' => 'required|date|after_or_equal:mulai_kerja',
+            'actual_hasil' => 'required|integer',
+            'mulai_kerja' => 'required',
+            'selesai_kerja' => 'required',
+            'shift' => 'required',
             'bagian' => 'required',
             'sub_bagian' => 'required',
-            'actual' => 'required',
             'catatan' => 'nullable|string',
         ]);
 
+        $report = ProductionReport::findOrFail($id);
+
         $validatedData['user_id'] = Auth::id();
 
-        $report = ProductionReport::findOrFail($id);
+        // Gunakan item_weight dari DB
+        $validatedData['weight_total'] = $report->item_weight * $validatedData['actual_hasil'];
+
+        // Hitung durasi kerja dalam jam desimal
+        $mulai = Carbon::parse($validatedData['mulai_kerja']);
+        $selesai = Carbon::parse($validatedData['selesai_kerja']);
+
+        // Jika selesai lebih kecil dari mulai, berarti lewat tengah malam
+        if ($selesai->lessThan($mulai)) {
+            $selesai->addDay();
+        }
+
+        // Hitung selisih jam (dengan pecahan)
+        $diffHours = round(abs($mulai->floatDiffInHours($selesai)), 2);
+
+        // Simpan hasil jam kerja (durasi)
+        $validatedData['hasil_jam_kerja'] = $diffHours;
+
+        // Hitung performa (hasil_jam_kerja / 7 * 100)
+        $validatedData['performa'] = round(($diffHours / 7) * 100, 2);
+
         $report->update($validatedData);
 
-        // Ambil divisi dari laporan
+        // Route redirect
         $divisiName = strtolower(str_replace(' ', '', $report->divisi->divisi));
 
-        // Mapping divisi → route
         $divisiRoutes = [
             'janfar'           => 'ppic.janfar',
             'sawing'           => 'ppic.sawing',
@@ -157,9 +179,9 @@ class ReportController extends Controller
 
         $route = $divisiRoutes[$divisiName] ?? 'dashboard.index';
 
-        return redirect()->route($route)
-            ->with('success', 'Laporan berhasil diperbarui!');
+        return redirect()->route($route)->with('success', 'Laporan berhasil diperbarui!');
     }
+
 
 
     /**

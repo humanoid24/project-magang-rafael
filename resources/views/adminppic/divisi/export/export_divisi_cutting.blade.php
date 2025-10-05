@@ -16,13 +16,18 @@
                 <th>Item Code</th>
                 <th>Item Name</th>
                 <th>QTY</th>
+                <th>Tebal</th>
+                <th>Panjang</th>
+                <th>Lebar</th>
                 <th>Item/Weight</th>
+                <th>Jumlah Stroke</th>
                 <th>Actual Hasil</th>
                 <th>WEIGHT TOTAL</th>
                 <th>Mulai Kerja</th>
                 <th>Selesai Kerja</th>
                 <th>Hasil Kerja</th>
                 <th>Performa</th>
+                <th>Group</th>
                 <th>1</th>
                 <th>2</th>
                 <th>3</th>
@@ -62,7 +67,11 @@
                     <td>{{ $item->item_code }}</td>
                     <td>{{ $item->item_name }}</td>
                     <td>{{ $item->qty }}</td>
+                    <td>{{ $item->tebal }}</td>
+                    <td>{{ $item->panjang }}</td>
+                    <td>{{ $item->lebar }}</td>
                     <td>{{ $item->item_weight }}</td>
+                    <td>{{ $item->jumlah_stroke }}</td>
                     <td>{{ $item->actual_hasil }}</td>
                     <td>{{ $item->weight_total }}</td>
                     <td>{{ \Carbon\Carbon::parse($item->mulai_kerja)->format('H:i') }}</td>
@@ -86,6 +95,7 @@
                         @endif
                     </td>
                     <td>{{ $item->performa }}</td>
+                    <td>{{ $item->group }}</td>
                     <td>
                         @if ($item->shift == 1)
                             {{ optional($item->user)->name ?? '' }}

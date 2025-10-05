@@ -91,23 +91,26 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>PDO DUE DATE</th>
                         <th>SO NO</th>
                         <th>Customer</th>
                         <th>PDO CRD</th>
+                        <th>Item Code</th>
                         <th>Item Name</th>
                         <th>QTY</th>
-                        <th>WEIGHT/PCS</th>
-                        <th>WEIGHT TOTAL</th>
-                        <th>Nama Pekerja</th>
 
-                        <th>Shift</th>
+                        <th>Item/Weight</th>
+                        <th>Actual Hasil</th>
+                        <th>WEIGHT TOTAL</th>
+
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
-                        <th>Lama Kerja</th>
+                        <th>Hasil Kerja</th>
+                        <th>Performa</th>
+                        <th>Shift</th>
                         <th>Workcenter</th>
                         <th>Mesin</th>
 
-                        <th>Actual</th>
 
                         <th>Catatan</th>
                         <th>Aksi</th>
@@ -117,32 +120,47 @@
                     @foreach($report as $item)
                         <tr>
                             <td>{{ ($report->currentPage() - 1) * $report->perPage() + $loop->iteration }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->pdo_due_date)->format('Y-m-d') }}</td>
                             <td>{{ $item->so_no }}</td>
                             <td>{{ $item->customer }}</td>
                             <td>{{ $item->pdo_crd }}</td>
+                            <td>{{ $item->item_code }}</td>
                             <td>{{ $item->item_name }}</td>
                             <td>{{ $item->qty }}</td>
-                            <td>{{ rtrim(rtrim($item->weight_pcs, '0'), '.') }}</td>
+                            <td>{{ $item->item_weight }}</td>
+                            <td>{{ $item->actual_hasil }}</td>
                             <td>{{ $item->weight_total }}</td>
-                            <td>{{ optional($item->user)->name ?? '-' }}</td>
+                            <td>
+                                {{ $item->mulai_kerja ? \Carbon\Carbon::parse($item->mulai_kerja)->format('H:i') : '' }}
+                            </td>
+                            <td>
+                                {{ $item->selesai_kerja ? \Carbon\Carbon::parse($item->selesai_kerja)->format('H:i') : '' }}
+                            </td>
 
 
-                            <td>{{ $item->shift }}</td>
-                            <td>{{ $item->mulai_kerja }}</td>
-                            <td>{{ $item->selesai_kerja }}</td>
                             <td>
                                 @if ($item->mulai_kerja && $item->selesai_kerja)
-                                    {{ \Carbon\Carbon::parse($item->mulai_kerja)->diffInMinutes(\Carbon\Carbon::parse($item->selesai_kerja)) }} menit
+                                    @php
+                                        $mulai = \Carbon\Carbon::parse($item->mulai_kerja);
+                                        $selesai = \Carbon\Carbon::parse($item->selesai_kerja);
+
+                                        if ($selesai->lessThan($mulai)) {
+                                            $selesai->addDay(); // kalau lewat tengah malam
+                                        }
+
+                                        $diffJam = round($mulai->diffInSeconds($selesai) / 3600, 2);
+                                    @endphp
+
+                                    {{ number_format($diffJam, 2) }}
                                 @else
                                     
                                 @endif
                             </td>
 
+                            <td>{{ $item->performa }}</td>
+                            <td>{{ $item->shift }}</td>
                             <td>{{ $item->bagian }}</td>
                             <td>{{ $item->sub_bagian }}</td>
-                            
-                            <td>{{ $item->actual }}</td>
-
                             <td>{{ $item->catatan }}</td>
 
                             <td>
