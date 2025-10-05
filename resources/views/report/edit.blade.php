@@ -26,17 +26,18 @@
 
                         <div class="form-group">
                             <label for="mulai_kerja">Mulai Kerja</label>
-                            <input id="mulai_kerja" type="date" name="mulai_kerja" 
-                                   value="{{ old('mulai_kerja', $report->mulai_kerja) }}" 
-                                   class="form-control" required>
+                            <input id="mulai_kerja" type="datetime-local" name="mulai_kerja"
+                                value="{{ old('mulai_kerja', \Carbon\Carbon::parse($report->mulai_kerja)->format('Y-m-d\TH:i')) }}"
+                                class="form-control" required>
                         </div>
 
                         <div class="form-group">
                             <label for="selesai_kerja">Selesai Kerja</label>
-                            <input id="selesai_kerja" type="date" name="selesai_kerja" 
-                                   value="{{ old('selesai_kerja', $report->selesai_kerja) }}" 
-                                   class="form-control" required>
+                            <input id="selesai_kerja" type="datetime-local" name="selesai_kerja"
+                                value="{{ old('selesai_kerja', \Carbon\Carbon::parse($report->selesai_kerja)->format('Y-m-d\TH:i')) }}"
+                                class="form-control" required>
                         </div>
+
 
                         <div class="form-group">
                             <div class="form-group">
@@ -56,8 +57,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="actual">Actual</label>
-                            <input type="text" id="actual" name="actual" 
+                            <label for="actual">Actual Hasil</label>
+                            <input type="text" id="actual" name="actual_hasil" 
                                    value="{{ old('actual', $report->actual) }}" 
                                    class="form-control" required>
                         </div>
