@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Imports\ProductionReportImport;
+use App\Imports\ProductionReportMultiImport;
 use App\Models\Divisi;
 use App\Models\ppic;
 use App\Models\ProductionReport;
@@ -10,6 +11,7 @@ use App\Traits\ReportFilter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -93,12 +95,19 @@ class AdminPPICController extends Controller
         // Simpan hasil validasi ke variabel
         $validatedData = $request->validate([
             'divisi_id' => 'required|exists:divisis,id',
-            'file'      => 'required|mimes:xlsx,csv'
+            'file'      => 'required|mimes:xlsx,csv',
+            'sheet'     => 'required'
         ]);
 
         try {
             // Import file sesuai divisi
-            Excel::import(new ProductionReportImport($validatedData['divisi_id']), $request->file('file'));
+            $import = new ProductionReportMultiImport($validatedData['divisi_id']);
+
+            // Set sheet yang dipilih user (misal: "1" untuk sheet tanggal 1)
+            $import->setSheetTitle($validatedData['sheet']);
+
+            // Import Excel - hanya sheet yang dipilih
+            Excel::import($import, $request->file('file'));
 
             // Ambil nama divisi
             $divisi = Divisi::findOrFail($validatedData['divisi_id']);
@@ -120,12 +129,16 @@ class AdminPPICController extends Controller
                 'weldingdoor'       => 'ppic.weldingdoor',
             ];
 
-            // Ambil route sesuai divisi, fallback ke janfar kalau tidak ditemukan
+            // Ambil route sesuai divisi, fallback ke index kalau tidak ditemukan
             $route = $divisiRoutes[$divisiName] ?? 'ppic.index';
 
             return redirect()->route($route)
-                ->with('success', 'Data Production Report berhasil diimport!');
+                ->with('success', 'Data Production Report dari sheet "' . $validatedData['sheet'] . '" berhasil diimport!');
         } catch (\Exception $e) {
+            // Log error untuk debugging
+            Log::error('Import error: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+
             return redirect()->back()->with('error', 'Import gagal: ' . $e->getMessage());
         }
     }
