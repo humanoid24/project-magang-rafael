@@ -47,7 +47,7 @@
             <th style="background:#fff;"></th> <!-- pemisah -->
             <th colspan="6" style="background:#f3f3f3;">REKAP OPERATOR</th>
             <th style="background:#fff;"></th> <!-- pemisah -->
-            <th colspan="3" style="background:#f3f3f3;">REKAP MESIN</th>
+            <th colspan="5" style="background:#f3f3f3;">REKAP MESIN</th>
         </tr>
 
         <tr>
@@ -94,8 +94,10 @@
 
             <th style="background:#eee;"></th> <!-- pemisah antar bagian -->
             <th>No Mesin</th>
-            <th>Jam Operasional</th>
-            <th>Utility</th>
+            <th>Jam Mesin Produktif</th>
+            <th>Mesin Berdasarkan Jam Kerja</th>
+            <th>Mesin On</th>
+            <th>Utility Mesin Produsi</th>
         </tr>
     </thead>
 
@@ -125,10 +127,14 @@
             $rekapMesin = $groupedMesin->map(function($items, $mesin) {
                 $totalJam = $items->sum('hasil_jam_kerja');
                 $utility = $totalJam / 14 * 100;
+                $mesin_on = $items->sum('waktu_setting');
+                $utility_mesin = $totalJam / $mesin_on;
                 return [
                     'mesin' => $mesin,
                     'jam_operasional' => $totalJam,
                     'utility' => $utility,
+                    'mesin_on' => $mesin_on,
+                    'utility_mesin' => $utility_mesin,
                 ];
             })->values();
         @endphp
@@ -168,8 +174,8 @@
                 <td>{{ $item->jumlah_stroke }}</td>
                 <td>{{ $item->actual_hasil }}</td>
                 <td>{{ $item->weight_total }}</td>
-                <td></td>
-                <td></td>
+                <td>{{ \Carbon\Carbon::parse($item->mesin_on)->format('H:i') }}</td>
+                <td>{{ \Carbon\Carbon::parse($item->selesai_kerja)->format('H:i') }}</td>
                 <td></td>
                 <td>{{ \Carbon\Carbon::parse($item->mulai_kerja)->format('H:i') }}</td>
                 <td>{{ \Carbon\Carbon::parse($item->selesai_kerja)->format('H:i') }}</td>
@@ -218,6 +224,8 @@
                     <td>{{ $mesinRekap['mesin'] }}</td>
                     <td>{{ number_format($mesinRekap['jam_operasional'], 1, ',', '.') }}</td>
                     <td>{{ number_format($mesinRekap['utility'], 1, ',', '.') }}%</td>
+                    <td>{{ number_format($mesinRekap['mesin_on'], 1, ',', '.') }}%</td>
+                    <td>{{ number_format($mesinRekap['utility_mesin'], 1, ',', '.') }}%</td>
                 @else
                     <td colspan="3"></td>
                 @endif

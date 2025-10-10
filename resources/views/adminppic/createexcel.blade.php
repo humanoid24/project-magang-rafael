@@ -62,7 +62,7 @@
                                 <small class="text-danger d-block mt-1">{{ $message }}</small>
                             @enderror
                             <small class="form-text text-muted">
-                                Format yang didukung: <strong>.xlsx</strong>, <strong>.csv</strong>
+                                Format yang didukung: <strong>.xlsx</strong>
                             </small>
                         </div>
 

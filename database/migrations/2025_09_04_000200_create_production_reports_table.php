@@ -33,9 +33,9 @@ return new class extends Migration
             $table->integer('jumlah_stroke')->nullable();
             $table->integer('actual_hasil')->nullable();
             $table->string('weight_total')->nullable();
-            $table->dateTime('start_tidak')->nullable();
-            $table->dateTime('selesai_tidak')->nullable();
-            $table->dateTime('total_tidak')->nullable();
+            $table->dateTime('mesin_on')->nullable();
+            $table->decimal('waktu_setting', 8, 2)->nullable();
+
             $table->dateTime('mulai_kerja')->nullable();
             $table->dateTime('selesai_kerja')->nullable();
             $table->decimal('hasil_jam_kerja', 8, 2)->nullable();            
