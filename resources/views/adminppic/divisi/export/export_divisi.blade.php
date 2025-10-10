@@ -43,12 +43,13 @@
         <table border="1" cellspacing="0" cellpadding="5">
     <thead>
         <tr>
-            <th colspan="29" style="background:#f3f3f3;">DETAIL PRODUKSI</th>
-            <th style="background:#fff;"></th> <!-- pemisah -->
+            <th colspan="26" style="background:#f3f3f3;">DETAIL PRODUKSI</th>
+            <th style="background:#fff;"></th>
             <th colspan="6" style="background:#f3f3f3;">REKAP OPERATOR</th>
-            <th style="background:#fff;"></th> <!-- pemisah -->
+            <th style="background:#fff;"></th>
             <th colspan="3" style="background:#f3f3f3;">REKAP MESIN</th>
         </tr>
+
 
         <tr>
             <!-- Kolom tabel utama -->
