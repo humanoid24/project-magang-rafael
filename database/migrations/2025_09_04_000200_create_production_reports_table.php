@@ -45,6 +45,7 @@ return new class extends Migration
             $table->string('bagian')->nullable();
             $table->string('sub_bagian')->nullable();
             $table->text('catatan')->nullable();
+            $table->string('sheet_date')->nullable();
             $table->timestamps();
         });
     }

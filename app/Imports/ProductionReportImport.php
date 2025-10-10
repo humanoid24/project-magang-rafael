@@ -12,16 +12,27 @@ use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 class ProductionReportImport implements ToCollection, WithCalculatedFormulas
 {
     protected $divisiId;
+    protected $sheetTitle;
+
 
     public function __construct($divisiId)
     {
         $this->divisiId = $divisiId;
     }
 
+    public function setSheetTitle($title)
+    {
+        $this->sheetTitle = $title;
+    }
+
     public function collection(Collection $rows)
     {
         $headers = [];
         $dataStart = false;
+
+        // optional: bisa simpan sheet_title di DB
+        $sheetDate = $this->sheetTitle;
+
 
         foreach ($rows as $index => $row) {
             $rowArray = $row->toArray();
@@ -72,7 +83,10 @@ class ProductionReportImport implements ToCollection, WithCalculatedFormulas
                 try {
                     $report = ProductionReport::create([
                         'divisi_id'     => $this->divisiId,
-                        'pdo_due_date'  => $this->getValue($data, ['pdo_due_date', 'pdo due date']) ?? null,
+                        'pdo_due_date' => $this->getValue($data, ['pdo_due_date', 'pdo due date'])
+                            ? $this->parseDate($this->getValue($data, ['pdo_due_date', 'pdo due date']))
+                            : null,
+
                         'so_no'         => $this->getValue($data, ['so no', 'so_no']),
                         'customer'      => $this->getValue($data, ['customer']),
                         'pdo_crd'       => $this->getValue($data, ['pdo_crd', 'pdocrd']),
@@ -83,12 +97,14 @@ class ProductionReportImport implements ToCollection, WithCalculatedFormulas
                         'panjang'       => $this->getNumeric($data, ['panjang']) ?? 0,
                         'lebar'         => $this->getNumeric($data, ['lebar']) ?? 0,
                         'item_weight'   => $this->getNumeric($data, ['item_weight', 'item weight', 'weight_per_pcs']),
+                        'sheet_date'  => $this->sheetTitle, // nama sheet / tanggal
                     ]);
                     // Log::debug('📝 Data akan disimpan:', $report->toArray()); // ✅ pindahin ke sini
                     // ✅ Tambahin log kalau sukses masuk DB
                     // Log::info('✅ Data berhasil disimpan ke DB (ID: ' . $report->id . ')', $report->toArray());
                 } catch (\Exception $e) {
-
+                    Log::error('Import failed: ' . $e->getMessage(), $data ?? []);
+                    throw $e; // biar error muncul di browser saat dev
                 }
             }
         }
@@ -133,11 +149,24 @@ class ProductionReportImport implements ToCollection, WithCalculatedFormulas
     {
         foreach ($keys as $key) {
             if (isset($data[$key]) && $data[$key] !== '') {
-                return $data[$key];
+                $val = $data[$key];
+
+                // Cek jika ini kemungkinan tanggal Excel
+                if (is_numeric($val)) {
+                    try {
+                        // Excel serial → Carbon date
+                        return \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($val))->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        return $val; // kalau gagal, tetap return
+                    }
+                }
+
+                return $val;
             }
         }
         return $default;
     }
+
 
     private function getNumeric(array $data, array $keys, $default = 0)
     {
@@ -150,5 +179,40 @@ class ProductionReportImport implements ToCollection, WithCalculatedFormulas
             }
         }
         return $default;
+    }
+
+    private function parseDate($value)
+    {
+        // Jika kosong, return null
+        if (!$value) return null;
+
+        // Jika angka (Excel serial)
+        if (is_numeric($value)) {
+            try {
+                return \Carbon\Carbon::instance(
+                    \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value)
+                )->format('Y-m-d');
+            } catch (\Exception $e) {
+                return null;
+            }
+        }
+
+        // Jika string, coba parse
+        try {
+            // replace "-" dengan "/" biar lebih konsisten
+            $value = str_replace('-', '/', $value);
+
+            // buat Carbon object
+            $date = \Carbon\Carbon::createFromFormat('d/m/Y', $value);
+
+            return $date->format('Y-m-d');
+        } catch (\Exception $e) {
+            try {
+                // fallback parse otomatis (Carbon bisa coba deteksi format lain)
+                return \Carbon\Carbon::parse($value)->format('Y-m-d');
+            } catch (\Exception $e) {
+                return null; // kalau gagal, kasih null
+            }
+        }
     }
 }

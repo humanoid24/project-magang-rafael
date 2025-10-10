@@ -66,6 +66,17 @@
                             </small>
                         </div>
 
+                        <div class="form-group mb-3">
+                            <label for="sheet">Pilih Tanggal Sheet</label>
+                            <select name="sheet" id="sheet" class="form-control" required>
+                                <option value="" selected disabled>Pilih Tanggal</option>
+                                @for ($i = 1; $i <= 31; $i++)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+
+
 
 
 
