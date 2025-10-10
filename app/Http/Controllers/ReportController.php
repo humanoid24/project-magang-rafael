@@ -131,6 +131,7 @@ class ReportController extends Controller
             'bagian' => 'required',
             'sub_bagian' => 'required',
             'catatan' => 'nullable|string',
+            'jumlah_stroke' => 'required',
         ]);
 
         $report = ProductionReport::findOrFail($id);

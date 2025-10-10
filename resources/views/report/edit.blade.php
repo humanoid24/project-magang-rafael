@@ -72,6 +72,13 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="jumlah_stroke">Jumlah Stroke</label>
+                            <input type="text" id="jumlah_stroke" name="jumlah_stroke" 
+                                   value="{{ old('jumlah_stroke', $report->jumlah_stroke) }}" 
+                                   class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
                             <label for="notes">Catatan</label>
                             <textarea id="notes" name="catatan" class="form-control">{{ old('catatan', $report->catatan) }}</textarea>
                         </div>

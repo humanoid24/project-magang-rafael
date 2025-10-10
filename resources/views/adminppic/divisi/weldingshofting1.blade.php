@@ -100,6 +100,8 @@
                         <th>QTY</th>
 
                         <th>Item/Weight</th>
+                        <th>Jumlah Stroke</th>
+
                         <th>Actual Hasil</th>
                         <th>WEIGHT TOTAL</th>
 
@@ -128,6 +130,8 @@
                             <td>{{ $item->item_name }}</td>
                             <td>{{ $item->qty }}</td>
                             <td>{{ $item->item_weight }}</td>
+                            <td>{{ $item->jumlah_stroke }}</td>
+
                             <td>{{ $item->actual_hasil }}</td>
                             <td>{{ $item->weight_total }}</td>
                             <td>
