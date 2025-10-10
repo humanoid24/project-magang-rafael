@@ -52,6 +52,13 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
+
+    flatpickr("#mesin_on", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true,
+        defaultDate: new Date() // otomatis isi dengan jam sekarang
+    });
     flatpickr("#mulai_kerja", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",

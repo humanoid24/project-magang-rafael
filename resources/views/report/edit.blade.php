@@ -25,6 +25,14 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="mesin_on">Jam Mesin On</label>
+                            <input id="mesin_on" type="datetime-local" name="mesin_on"
+                            value="{{ old('mesin_on', \Carbon\Carbon::parse($report->mesin_on)->setTimezone('Asia/Jakarta')->format('Y-m-d\TH:i')) }}"
+                            class="form-control" required>
+
+                        </div>
+
+                        <div class="form-group">
                             <label for="mulai_kerja">Mulai Kerja</label>
                             <input id="mulai_kerja" type="datetime-local" name="mulai_kerja"
                                 value="{{ old('mulai_kerja', \Carbon\Carbon::parse($report->mulai_kerja)->format('Y-m-d\TH:i')) }}"

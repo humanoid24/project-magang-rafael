@@ -124,6 +124,7 @@ class ReportController extends Controller
     {
         $validatedData = $request->validate([
             'actual_hasil' => 'required|integer',
+            'mesin_on' => 'required',
             'mulai_kerja' => 'required',
             'selesai_kerja' => 'required',
             'shift' => 'required',
@@ -138,7 +139,22 @@ class ReportController extends Controller
 
         // Gunakan item_weight dari DB
         $validatedData['weight_total'] = $report->item_weight * $validatedData['actual_hasil'];
+        
+        // Jam tidak terpakai
+        $mesin_on = Carbon::parse($validatedData['mesin_on']);
+        $selesai = Carbon::parse($validatedData['selesai_kerja']);
 
+        // Jika selesai lebih kecil dari mulai, berarti lewat tengah malam
+        if ($selesai->lessThan($mesin_on)) {
+            $selesai->addDay();
+        }
+
+        // Hitung selisih jam (dengan pecahan)
+        $diffHours = round(abs($mesin_on->floatDiffInHours($selesai)), 2);
+        // Simpan hasil jam kerja (durasi)
+        $validatedData['waktu_setting'] = $diffHours;
+
+        // Hasil jam kerja
         // Hitung durasi kerja dalam jam desimal
         $mulai = Carbon::parse($validatedData['mulai_kerja']);
         $selesai = Carbon::parse($validatedData['selesai_kerja']);
