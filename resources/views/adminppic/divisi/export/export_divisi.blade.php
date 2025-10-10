@@ -169,9 +169,9 @@
                 <td>{{ $item->jumlah_stroke }}</td>
                 <td>{{ $item->actual_hasil }}</td>
                 <td>{{ $item->weight_total }}</td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ \Carbon\Carbon::parse($item->mesin_on)->format('H:i') }}</td>
+                <td>{{ \Carbon\Carbon::parse($item->selesai_kerja)->format('H:i') }}</td>
+                <td>{{ $item->waktu_setting }}</td>
                 <td>{{ \Carbon\Carbon::parse($item->mulai_kerja)->format('H:i') }}</td>
                 <td>{{ \Carbon\Carbon::parse($item->selesai_kerja)->format('H:i') }}</td>
                 <td>
