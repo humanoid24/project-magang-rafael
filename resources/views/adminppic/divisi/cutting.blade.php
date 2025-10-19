@@ -72,6 +72,11 @@
             Filter Tanggal
         </button>
         <a href="{{ route('ppic.import.form') }}" class="btn btn-success mb-3">+ Import Excel</a>
+        <form action="{{ route('ppic.delete.cutting') }}" method="POST" style="display:inline;">
+            @csrf
+            @method('DELETE')
+            <button onclick="return confirm('Yakin ingin dihapus?')" class="btn btn-danger mb-3">Hapus</button>
+        </form>
     </div>
   @endif
 

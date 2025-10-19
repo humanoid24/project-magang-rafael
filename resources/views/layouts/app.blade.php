@@ -31,6 +31,24 @@
                     @yield('content')
                 </div>
             </div>
+
+            {{-- Footer --}}
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>
+                            &copy; {{ date('Y') }} — Developed by 
+                            <strong>
+                                <a href="https://www.instagram.com/biqri_abdillah24/" target="_blank" class="text-primary" style="text-decoration: none;">
+                                    Biqri Abdillah
+                                </a>
+                            </strong>. 
+                            All rights reserved.
+                        </span>
+                    </div>
+                </div>
+            </footer>
+
         </div>
     </div>
 

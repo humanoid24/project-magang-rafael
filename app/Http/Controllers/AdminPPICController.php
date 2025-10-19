@@ -7,6 +7,7 @@ use App\Imports\ProductionReportMultiImport;
 use App\Models\Divisi;
 use App\Models\ppic;
 use App\Models\ProductionReport;
+use App\Models\User;
 use App\Traits\ReportFilter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -144,9 +145,6 @@ class AdminPPICController extends Controller
     }
 
 
-
-
-
     /**
      * Display the specified resource.
      */
@@ -225,6 +223,22 @@ class AdminPPICController extends Controller
             ->with('success', 'Laporan berhasil dihapus!');
     }
 
+    public function indexUser(Request $request)
+    {
+        $user = User::paginate(10)->appends($request->all());
+
+        return view('adminppic.user', compact('user'));
+    }
+
+    public function destroyUser(string $id)
+    {
+        $user = User::findorFail($id);
+        $user->delete();
+
+        return redirect()->back()
+            ->with('success', 'Laporan berhasil dihapus!');
+    }
+
 
 
     public function janfar(Request $request)
@@ -287,6 +301,21 @@ class AdminPPICController extends Controller
             ->header('Cache-Control', 'no-cache, must-revalidate')
             ->header('Pragma', 'no-cache');
     }
+
+
+    public function deleteJanfar()
+    {
+        $divisi = Divisi::where('divisi', 'JANFAR')->first();
+        if (!$divisi) {
+            return redirect()->back()->with('error', 'Divisi JANFAR tidak ditemukan.');
+        }
+
+        ProductionReport::where('divisi_id', $divisi->id)->delete();
+
+        return redirect()->back()
+            ->with('success', 'Laporan berhasil dihapus!');
+    }
+
 
 
 
@@ -353,6 +382,21 @@ class AdminPPICController extends Controller
             ->header('Cache-Control', 'no-cache, must-revalidate')
             ->header('Pragma', 'no-cache');
     }
+
+    public function deleteSawing()
+    {
+        $divisi = Divisi::where('divisi', 'SAWING')->first();
+
+        if (!$divisi) {
+            return redirect()->back()->with('error', 'Divisi Sawing tidak ditemukan.');
+        }
+
+        ProductionReport::where('divisi_id', $divisi->id)->delete();
+
+        return redirect()->back()
+            ->with('success', 'Laporan berhasil dihapus!');
+    }
+
 
 
 
@@ -423,6 +467,21 @@ class AdminPPICController extends Controller
             ->header('Pragma', 'no-cache');
     }
 
+
+    public function deleteCutting()
+    {
+        $divisi = Divisi::where('divisi', 'CUTTING')->first();
+
+        if (!$divisi) {
+            return redirect()->back()->with('error', 'Divisi Cutting tidak ditemukan.');
+        }
+
+        ProductionReport::where('divisi_id', $divisi->id)->delete();
+
+        return redirect()->back()
+            ->with('success', 'Laporan berhasil dihapus!');
+    }
+
     public function bending(Request $request)
     {
         // cari divisi_id BENDING
@@ -488,6 +547,20 @@ class AdminPPICController extends Controller
             ->header('Content-Disposition', "attachment; filename=laporan_bending.xls")
             ->header('Cache-Control', 'no-cache, must-revalidate')
             ->header('Pragma', 'no-cache');
+    }
+
+    public function deleteBending()
+    {
+        $divisi = Divisi::where('divisi', 'BENDING')->first();
+
+        if (!$divisi) {
+            return redirect()->back()->with('error', 'Divisi Bending tidak ditemukan.');
+        }
+
+        ProductionReport::where('divisi_id', $divisi->id)->delete();
+
+        return redirect()->back()
+            ->with('success', 'Laporan berhasil dihapus!');
     }
 
 
@@ -556,6 +629,21 @@ class AdminPPICController extends Controller
             ->header('Content-Disposition', "attachment; filename=laporan_press.xls")
             ->header('Cache-Control', 'no-cache, must-revalidate')
             ->header('Pragma', 'no-cache');
+    }
+
+
+    public function deletePress()
+    {
+        $divisi = Divisi::where('divisi', 'PRESS')->first();
+
+        if (!$divisi) {
+            return redirect()->back()->with('error', 'Divisi Press tidak ditemukan.');
+        }
+
+        ProductionReport::where('divisi_id', $divisi->id)->delete();
+
+        return redirect()->back()
+            ->with('success', 'Laporan berhasil dihapus!');
     }
 
 
@@ -628,6 +716,21 @@ class AdminPPICController extends Controller
     }
 
 
+    public function deleteRacking()
+    {
+        $divisi = Divisi::where('divisi', 'RACKING')->first();
+
+        if (!$divisi) {
+            return redirect()->back()->with('error', 'Divisi Racking tidak ditemukan.');
+        }
+
+        ProductionReport::where('divisi_id', $divisi->id)->delete();
+
+        return redirect()->back()
+            ->with('success', 'Laporan berhasil dihapus!');
+    }
+
+
     public function rollforming(Request $request)
     {
         // cari divisi_id ROLL FORMING
@@ -694,6 +797,20 @@ class AdminPPICController extends Controller
             ->header('Pragma', 'no-cache');
     }
 
+    public function deleteRollForming()
+    {
+        $divisi = Divisi::where('divisi', 'ROLL FORMING')->first();
+
+        if (!$divisi) {
+            return redirect()->back()->with('error', 'Divisi Roll forming tidak ditemukan.');
+        }
+
+        ProductionReport::where('divisi_id', $divisi->id)->delete();
+
+        return redirect()->back()
+            ->with('success', 'Laporan berhasil dihapus!');
+    }
+
 
     public function spotwelding(Request $request)
     {
@@ -756,6 +873,20 @@ class AdminPPICController extends Controller
             ->header('Pragma', 'no-cache');
     }
 
+    public function deleteSpotWelding()
+    {
+        $divisi = Divisi::where('divisi', 'SPOT WELDING')->first();
+
+        if (!$divisi) {
+            return redirect()->back()->with('error', 'Divisi Spot Welding tidak ditemukan.');
+        }
+
+        ProductionReport::where('divisi_id', $divisi->id)->delete();
+
+        return redirect()->back()
+            ->with('success', 'Laporan berhasil dihapus!');
+    }
+
 
     public function weldingaccesoris(Request $request)
     {
@@ -813,6 +944,20 @@ class AdminPPICController extends Controller
             ->header('Content-Disposition', "attachment; filename=laporan_weldingaccesoris.xls")
             ->header('Cache-Control', 'no-cache, must-revalidate')
             ->header('Pragma', 'no-cache');
+    }
+
+    public function deleteWeldingAccesoris()
+    {
+        $divisi = Divisi::where('divisi', 'WELDING ACCESORIS')->first();
+
+        if (!$divisi) {
+            return redirect()->back()->with('error', 'Divisi Welding Accesoris tidak ditemukan.');
+        }
+
+        ProductionReport::where('divisi_id', $divisi->id)->delete();
+
+        return redirect()->back()
+            ->with('success', 'Laporan berhasil dihapus!');
     }
 
 
@@ -878,6 +1023,20 @@ class AdminPPICController extends Controller
             ->header('Pragma', 'no-cache');
     }
 
+    public function deleteWeldingShofiting1()
+    {
+        $divisi = Divisi::where('divisi', 'WELDING SHOFITING 1')->first();
+
+        if (!$divisi) {
+            return redirect()->back()->with('error', 'Divisi Welding Shofiting 1 tidak ditemukan.');
+        }
+
+        ProductionReport::where('divisi_id', $divisi->id)->delete();
+
+        return redirect()->back()
+            ->with('success', 'Laporan berhasil dihapus!');
+    }
+
 
     public function weldingshofiting2(Request $request)
     {
@@ -937,6 +1096,20 @@ class AdminPPICController extends Controller
             ->header('Content-Disposition', "attachment; filename=laporan_weldingshofiting2.xls")
             ->header('Cache-Control', 'no-cache, must-revalidate')
             ->header('Pragma', 'no-cache');
+    }
+
+    public function deleteWeldingShofiting2()
+    {
+        $divisi = Divisi::where('divisi', 'WELDING SHOFITING 2')->first();
+
+        if (!$divisi) {
+            return redirect()->back()->with('error', 'Divisi Welding Shofiting 2 tidak ditemukan.');
+        }
+
+        ProductionReport::where('divisi_id', $divisi->id)->delete();
+
+        return redirect()->back()
+            ->with('success', 'Laporan berhasil dihapus!');
     }
 
 
@@ -999,6 +1172,21 @@ class AdminPPICController extends Controller
             ->header('Content-Disposition', "attachment; filename=laporan_weldingdoor.xls")
             ->header('Cache-Control', 'no-cache, must-revalidate')
             ->header('Pragma', 'no-cache');
+    }
+
+
+    public function deleteWeldingDoor()
+    {
+        $divisi = Divisi::where('divisi', 'WELDING DOOR')->first();
+
+        if (!$divisi) {
+            return redirect()->back()->with('error', 'Divisi Welding Door tidak ditemukan.');
+        }
+
+        ProductionReport::where('divisi_id', $divisi->id)->delete();
+
+        return redirect()->back()
+            ->with('success', 'Laporan berhasil dihapus!');
     }
 
 }

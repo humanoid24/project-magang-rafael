@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('panjang')->nullable();
             $table->string('lebar')->nullable();
             $table->decimal('item_weight', 10, 2)->nullable();
-            $table->integer('jumlah_stroke')->nullable();
+            $table->string('jumlah_stroke')->nullable();
             $table->integer('actual_hasil')->nullable();
             $table->string('weight_total')->nullable();
             $table->dateTime('mesin_on')->nullable();
