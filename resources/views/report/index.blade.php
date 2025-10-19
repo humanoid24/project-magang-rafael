@@ -32,6 +32,7 @@
                             <th>Nama Pekerja</th>
                         @endif
                         
+                        <th>PDO DUE DATE</th>
                         <th>SO NO</th>
                         <th>Customer</th>
                         <th>PDO CRD</th>
@@ -46,6 +47,11 @@
                         <th>Jumlah Stroke</th>
                         <th>Actual Hasil</th>
                         <th>WEIGHT TOTAL</th>
+
+                        <th>Jam mesin on</th>
+                        <th>Jam mesin off</th>
+                        <th>Waktu setting</th>
+
 
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
@@ -87,6 +93,7 @@
                                 <td>{{ optional($pekerja->user)->name }}</td>
                             @endif
 
+                            <td>{{ \Carbon\Carbon::parse($pekerja->pdo_due_date)->format('Y-m-d') }}</td>
                             <td>{{ $pekerja->so_no }}</td>
                             <td>{{ $pekerja->customer }}</td>
                             <td>{{ $pekerja->pdo_crd }}</td>
@@ -100,15 +107,39 @@
                             <td>{{ $pekerja->jumlah_stroke }}</td>
                             <td>{{ $pekerja->actual_hasil }}</td>
                             <td>{{ $pekerja->weight_total }}</td>
-                            <td>{{ $pekerja->mulai_kerja }}</td>
-                            <td>{{ $pekerja->selesai_kerja }}</td>
+                            <td>
+                                {{ $pekerja->mesin_on ? \Carbon\Carbon::parse($pekerja->mesin_on)->format('H:i') : '' }}
+                            </td>
+                            <td>
+                                {{ $pekerja->selesai_kerja ? \Carbon\Carbon::parse($pekerja->selesai_kerja)->format('H:i') : '' }}
+                            </td>
+                            <td>{{ $pekerja->waktu_setting }}</td>
+                            <td>
+                                {{ $pekerja->mulai_kerja ? \Carbon\Carbon::parse($pekerja->mulai_kerja)->format('H:i') : '' }}
+                            </td>
+                            <td>
+                                {{ $pekerja->selesai_kerja ? \Carbon\Carbon::parse($pekerja->selesai_kerja)->format('H:i') : '' }}
+                            </td>
+
                             <td>
                                 @if ($pekerja->mulai_kerja && $pekerja->selesai_kerja)
-                                    {{ \Carbon\Carbon::parse($pekerja->mulai_kerja)->diffInMinutes(\Carbon\Carbon::parse($pekerja->selesai_kerja)) }} menit
+                                    @php
+                                        $mulai = \Carbon\Carbon::parse($pekerja->mulai_kerja);
+                                        $selesai = \Carbon\Carbon::parse($pekerja->selesai_kerja);
+
+                                        if ($selesai->lessThan($mulai)) {
+                                            $selesai->addDay(); // kalau lewat tengah malam
+                                        }
+
+                                        $diffJam = round($mulai->diffInSeconds($selesai) / 3600, 2);
+                                    @endphp
+
+                                    {{ number_format($diffJam, 2) }}
                                 @else
                                     -
                                 @endif
                             </td>
+
                             <td>{{ $pekerja->performa }}</td>
                             <td>{{ $pekerja->group }}</td>
                             <td>{{ $pekerja->shift }}</td>
