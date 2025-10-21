@@ -150,10 +150,10 @@
                             <td>{{ $item->actual_hasil }}</td>
                             <td>{{ $item->weight_total }}</td>
                             <td>
-                                {{ $item->mesin_on ? \Carbon\Carbon::parse($item->mesin_on)->format('H:i') : '' }}
+                                {{ $item->mesin_on ? \Carbon\Carbon::parse($item->mesin_on) : '' }}
                             </td>
                             <td>
-                                {{ $item->selesai_kerja ? \Carbon\Carbon::parse($item->selesai_kerja)->format('H:i') : '' }}
+                                {{ $item->selesai_kerja ? \Carbon\Carbon::parse($item->selesai_kerja) : '' }}
                             </td>
                             <td>{{ $item->waktu_setting }}</td>
                             <td>

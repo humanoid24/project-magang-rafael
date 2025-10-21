@@ -108,10 +108,10 @@
                             <td>{{ $pekerja->actual_hasil }}</td>
                             <td>{{ $pekerja->weight_total }}</td>
                             <td>
-                                {{ $pekerja->mesin_on ? \Carbon\Carbon::parse($pekerja->mesin_on)->format('H:i') : '' }}
+                                {{ $pekerja->mesin_on ? \Carbon\Carbon::parse($pekerja->mesin_on) : '' }}
                             </td>
                             <td>
-                                {{ $pekerja->selesai_kerja ? \Carbon\Carbon::parse($pekerja->selesai_kerja)->format('H:i') : '' }}
+                                {{ $pekerja->selesai_kerja ? \Carbon\Carbon::parse($pekerja->selesai_kerja) : '' }}
                             </td>
                             <td>{{ $pekerja->waktu_setting }}</td>
                             <td>
