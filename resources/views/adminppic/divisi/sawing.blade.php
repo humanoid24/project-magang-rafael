@@ -109,6 +109,10 @@
                         <th>Actual Hasil</th>
                         <th>WEIGHT TOTAL</th>
 
+                        <th>Jam mesin on</th>
+                        <th>Jam mesin off</th>
+                        <th>Waktu setting</th>
+
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
                         <th>Hasil Kerja</th>
@@ -138,6 +142,13 @@
 
                             <td>{{ $item->actual_hasil }}</td>
                             <td>{{ $item->weight_total }}</td>
+                            <td>
+                                {{ $item->mesin_on ? \Carbon\Carbon::parse($item->mesin_on) : '' }}
+                            </td>
+                            <td>
+                                {{ $item->selesai_kerja ? \Carbon\Carbon::parse($item->selesai_kerja) : '' }}
+                            </td>
+                            <td>{{ $item->waktu_setting }}</td>
                             <td>
                                 {{ $item->mulai_kerja ? \Carbon\Carbon::parse($item->mulai_kerja) : '' }}
                             </td>
