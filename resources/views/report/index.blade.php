@@ -115,10 +115,10 @@
                             </td>
                             <td>{{ $pekerja->waktu_setting }}</td>
                             <td>
-                                {{ $pekerja->mulai_kerja ? \Carbon\Carbon::parse($pekerja->mulai_kerja)->format('H:i') : '' }}
+                                {{ $pekerja->mulai_kerja ? \Carbon\Carbon::parse($pekerja->mulai_kerja) : '' }}
                             </td>
                             <td>
-                                {{ $pekerja->selesai_kerja ? \Carbon\Carbon::parse($pekerja->selesai_kerja)->format('H:i') : '' }}
+                                {{ $pekerja->selesai_kerja ? \Carbon\Carbon::parse($pekerja->selesai_kerja) : '' }}
                             </td>
 
                             <td>
