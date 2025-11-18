@@ -123,7 +123,7 @@
                         <th>Performa</th>
                         <th>Group</th>
                         <th>Shift</th>
-                        <th>Workcenter</th>
+                        <th>Workstation</th>
                         <th>Mesin</th>
 
 
@@ -155,7 +155,26 @@
                             <td>
                                 {{ $item->selesai_kerja ? \Carbon\Carbon::parse($item->selesai_kerja) : '' }}
                             </td>
-                            <td>{{ $item->waktu_setting }}</td>
+                            <td>
+                                @if ($item->mesin_on && $item->selesai_kerja)
+                                    @php
+                                        $mulai = \Carbon\Carbon::parse($item->mesin_on);
+                                        $selesai = \Carbon\Carbon::parse($item->selesai_kerja);
+
+                                        if ($selesai->lessThan($mulai)) {
+                                            $selesai->addDay(); // kalau lewat tengah malam
+                                        }
+
+                                        // --- GUNAKAN METODE INI ---
+                                        // diffInMinutes() langsung menghasilkan total menit sebagai angka bulat
+                                        $totalMenit = $mulai->diffInMinutes($selesai);
+                                    @endphp
+
+                                    {{ $totalMenit }} Menit
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td>
                                 {{ $item->mulai_kerja ? \Carbon\Carbon::parse($item->mulai_kerja) : '' }}
                             </td>
@@ -173,10 +192,12 @@
                                             $selesai->addDay(); // kalau lewat tengah malam
                                         }
 
-                                        $diffJam = round($mulai->diffInSeconds($selesai) / 3600, 2);
+                                        // --- GUNAKAN METODE INI ---
+                                        // diffInMinutes() langsung menghasilkan total menit sebagai angka bulat
+                                        $totalMenit = $mulai->diffInMinutes($selesai);
                                     @endphp
 
-                                    {{ number_format($diffJam, 2) }}
+                                    {{ $totalMenit }} Menit
                                 @else
                                     -
                                 @endif
