@@ -103,6 +103,9 @@
                         <th>Item Code</th>
                         <th>Item Name</th>
                         <th>QTY</th>
+                        <th>Tebal</th>
+                        <th>Panjang</th>
+                        <th>Lebar</th>
 
                         <th>Item/Weight</th>
                         <th>Jumlah Stroke</th>
@@ -113,12 +116,14 @@
                         <th>Jam mesin off</th>
                         <th>Waktu setting</th>
 
+
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
                         <th>Hasil Kerja</th>
                         <th>Performa</th>
+                        <th>Group</th>
                         <th>Shift</th>
-                        <th>Workcenter</th>
+                        <th>Workstation</th>
                         <th>Mesin</th>
 
 
@@ -137,9 +142,11 @@
                             <td>{{ $item->item_code }}</td>
                             <td>{{ $item->item_name }}</td>
                             <td>{{ $item->qty }}</td>
+                            <td>{{ $item->tebal }}</td>
+                            <td>{{ $item->panjang }}</td>
+                            <td>{{ $item->lebar }}</td>
                             <td>{{ $item->item_weight }}</td>
                             <td>{{ $item->jumlah_stroke }}</td>
-
                             <td>{{ $item->actual_hasil }}</td>
                             <td>{{ $item->weight_total }}</td>
                             <td>
@@ -148,7 +155,26 @@
                             <td>
                                 {{ $item->selesai_kerja ? \Carbon\Carbon::parse($item->selesai_kerja) : '' }}
                             </td>
-                            <td>{{ $item->waktu_setting }}</td>
+                            <td>
+                                @if ($item->mesin_on && $item->selesai_kerja)
+                                    @php
+                                        $mulai = \Carbon\Carbon::parse($item->mesin_on);
+                                        $selesai = \Carbon\Carbon::parse($item->selesai_kerja);
+
+                                        if ($selesai->lessThan($mulai)) {
+                                            $selesai->addDay(); // kalau lewat tengah malam
+                                        }
+
+                                        // --- GUNAKAN METODE INI ---
+                                        // diffInMinutes() langsung menghasilkan total menit sebagai angka bulat
+                                        $totalMenit = $mulai->diffInMinutes($selesai);
+                                    @endphp
+
+                                    {{ $totalMenit }} Menit
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td>
                                 {{ $item->mulai_kerja ? \Carbon\Carbon::parse($item->mulai_kerja) : '' }}
                             </td>
@@ -166,16 +192,19 @@
                                             $selesai->addDay(); // kalau lewat tengah malam
                                         }
 
-                                        $diffJam = round($mulai->diffInSeconds($selesai) / 3600, 2);
+                                        // --- GUNAKAN METODE INI ---
+                                        // diffInMinutes() langsung menghasilkan total menit sebagai angka bulat
+                                        $totalMenit = $mulai->diffInMinutes($selesai);
                                     @endphp
 
-                                    {{ number_format($diffJam, 2) }}
+                                    {{ $totalMenit }} Menit
                                 @else
                                     -
                                 @endif
                             </td>
 
                             <td>{{ $item->performa }}</td>
+                            <td>{{ $item->group }}</td>
                             <td>{{ $item->shift }}</td>
                             <td>{{ $item->bagian }}</td>
                             <td>{{ $item->sub_bagian }}</td>
