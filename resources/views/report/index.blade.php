@@ -55,7 +55,7 @@
 
                         <th>Mulai Kerja</th>
                         <th>Selesai Kerja</th>
-                        <th>Hasil Kerja</th>
+                        <th>Lama Kerja</th>
                         <th>Performa</th>
                         <th>Group</th>
                         <th>Shift</th>
@@ -113,6 +113,7 @@
                             <td>
                                 {{ $pekerja->selesai_kerja ? \Carbon\Carbon::parse($pekerja->selesai_kerja) : '' }}
                             </td>
+                            <td>
                                 @if ($pekerja->mesin_on && $pekerja->selesai_kerja)
                                     @php
                                         $mulai = \Carbon\Carbon::parse($pekerja->mesin_on);
@@ -131,6 +132,7 @@
                                 @else
                                     -
                                 @endif
+                            </td>
                             <td>
                                 {{ $pekerja->mulai_kerja ? \Carbon\Carbon::parse($pekerja->mulai_kerja) : '' }}
                             </td>
