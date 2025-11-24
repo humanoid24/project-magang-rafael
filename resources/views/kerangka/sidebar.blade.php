@@ -40,11 +40,13 @@
     </div>
 </li>
 
-<li class="nav-item active">
-    <a class="nav-link" href="{{ route('ppic.index.user') }}">
-        <i class="fas fa-user"></i>
-        <span>User</span></a>
-</li>
+@if (isAdmin() || isAdminPPIC())
+    <li class="nav-item active">
+        <a class="nav-link" href="{{ route('ppic.index.user') }}">
+            <i class="fas fa-user"></i>
+            <span>User</span></a>
+    </li>
+@endif
 
 
 {{-- <li class="nav-item active">

@@ -24,7 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/ppic/import', [AdminPPICController::class, 'import'])->name('ppic.import.process');
     Route::resource('/ppic', AdminPPICController::class);
     Route::get('/ppic/user/show', [AdminPPICController::class, 'indexUser'])->name('ppic.index.user');
-    Route::delete('/ppic/delete/user/{$id}',[AdminPPICController::class, 'destroyUser'])->name('ppic.delete.user');
+    Route::delete('/ppic/delete/user/{id}',[AdminPPICController::class, 'destroyUser'])->name('ppic.delete.user');
 
     Route::get('/ppic-janfar', [AdminPPICController::class, 'janfar'])->name('ppic.janfar');
     Route::get('/ppic-janfar/filterdata', [AdminPPICController::class, 'lihatsemuadatajanfar'])->name('ppic.janfar.filter');
